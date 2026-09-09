@@ -3,6 +3,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 const testRoutes = require('./routes/testRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -19,6 +20,9 @@ app.use(express.json());
 
 // Mount test routes under /api
 app.use('/api', testRoutes);
+
+// Mount auth routes under /api/auth
+app.use('/api/auth', authRoutes);
 
 // Handle requests to undefined routes
 app.use((req, res) => {
