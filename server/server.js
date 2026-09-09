@@ -4,6 +4,7 @@ require('dotenv').config();
 
 const testRoutes = require('./routes/testRoutes');
 const authRoutes = require('./routes/authRoutes');
+const patientRoutes = require('./routes/patientRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -23,6 +24,9 @@ app.use('/api', testRoutes);
 
 // Mount auth routes under /api/auth
 app.use('/api/auth', authRoutes);
+
+// Mount patient routes under /api/patients
+app.use('/api/patients', patientRoutes);
 
 // Handle requests to undefined routes
 app.use((req, res) => {
