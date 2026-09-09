@@ -32,12 +32,12 @@ CREATE TABLE Doctors (
   user_id INT UNIQUE NOT NULL,
   specialization VARCHAR(100) NOT NULL,
   qualification VARCHAR(200),
-  experience_years INT,
-  consultation_fee DECIMAL(10,2) NOT NULL,
+  experience_years INT CHECK (experience_years >= 0),
+  consultation_fee DECIMAL(10,2) NOT NULL CHECK (consultation_fee >= 0),
   available_days VARCHAR(100),
   available_time_start TIME,
   available_time_end TIME,
-  FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
+  FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE RESTRICT
 );
 
 -- ============================================
@@ -56,7 +56,16 @@ CREATE TABLE Patients (
   emergency_contact_name VARCHAR(100),
   emergency_contact_phone VARCHAR(15),
   blood_group VARCHAR(5),
-  status ENUM('Registered', 'Appointment Scheduled', 'Checked In', 'Consultation Completed', 'Admitted', 'Ready for Discharge', 'Discharged', 'Follow-up Scheduled') DEFAULT 'Registered',
+  status ENUM(
+    'Registered',
+    'Appointment Scheduled',
+    'Checked In',
+    'Consultation Completed',
+    'Admitted',
+    'Ready for Discharge',
+    'Discharged',
+    'Follow-up Scheduled'
+  ) DEFAULT 'Registered',
   registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -69,8 +78,8 @@ CREATE TABLE Rooms (
   room_number VARCHAR(10) UNIQUE NOT NULL,
   room_type ENUM('General', 'Semi-Private', 'Private', 'ICU') NOT NULL,
   floor INT,
-  bed_count INT NOT NULL,
-  price_per_day DECIMAL(10,2) NOT NULL,
+  bed_count INT NOT NULL CHECK (bed_count >= 0),
+  price_per_day DECIMAL(10,2) NOT NULL CHECK (price_per_day >= 0),
   is_available BOOLEAN DEFAULT TRUE
 );
 
@@ -88,8 +97,8 @@ CREATE TABLE Appointments (
   status ENUM('Scheduled', 'Checked In', 'Completed', 'Cancelled') DEFAULT 'Scheduled',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (patient_id) REFERENCES Patients(patient_id) ON DELETE CASCADE,
-  FOREIGN KEY (doctor_id) REFERENCES Doctors(doctor_id) ON DELETE CASCADE
+  FOREIGN KEY (patient_id) REFERENCES Patients(patient_id) ON DELETE RESTRICT,
+  FOREIGN KEY (doctor_id) REFERENCES Doctors(doctor_id) ON DELETE RESTRICT
 );
 
 -- ============================================
@@ -104,7 +113,7 @@ CREATE TABLE Consultations (
   prescription TEXT,
   notes TEXT,
   consultation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (appointment_id) REFERENCES Appointments(appointment_id) ON DELETE CASCADE
+  FOREIGN KEY (appointment_id) REFERENCES Appointments(appointment_id) ON DELETE RESTRICT
 );
 
 -- ============================================
@@ -119,28 +128,29 @@ CREATE TABLE Admissions (
   admission_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   reason TEXT NOT NULL,
   status ENUM('Active', 'Discharged') DEFAULT 'Active',
-  FOREIGN KEY (patient_id) REFERENCES Patients(patient_id) ON DELETE CASCADE,
-  FOREIGN KEY (room_id) REFERENCES Rooms(room_id) ON DELETE CASCADE,
-  FOREIGN KEY (doctor_id) REFERENCES Doctors(doctor_id) ON DELETE CASCADE
+  FOREIGN KEY (patient_id) REFERENCES Patients(patient_id) ON DELETE RESTRICT,
+  FOREIGN KEY (room_id) REFERENCES Rooms(room_id) ON DELETE RESTRICT,
+  FOREIGN KEY (doctor_id) REFERENCES Doctors(doctor_id) ON DELETE RESTRICT
 );
 
 -- ============================================
 -- Table 8: Bills
--- Purpose: Tracks billing for consultations and inpatient admissions, including consultation, room, and additional charges
+-- Purpose: Tracks billing for consultations and inpatient admissions,
+--          including consultation, room, and additional charges
 -- ============================================
 CREATE TABLE Bills (
   bill_id INT AUTO_INCREMENT PRIMARY KEY,
   patient_id INT NOT NULL,
   generated_by_user_id INT NOT NULL,
-  consultation_charge DECIMAL(10,2) DEFAULT 0,
-  room_charge DECIMAL(10,2) DEFAULT 0,
-  additional_charge DECIMAL(10,2) DEFAULT 0,
-  total_amount DECIMAL(10,2) NOT NULL,
+  consultation_charge DECIMAL(10,2) DEFAULT 0 CHECK (consultation_charge >= 0),
+  room_charge DECIMAL(10,2) DEFAULT 0 CHECK (room_charge >= 0),
+  additional_charge DECIMAL(10,2) DEFAULT 0 CHECK (additional_charge >= 0),
+  total_amount DECIMAL(10,2) NOT NULL CHECK (total_amount >= 0),
   payment_status ENUM('Pending', 'Paid') DEFAULT 'Pending',
   payment_date TIMESTAMP NULL,
   generated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (patient_id) REFERENCES Patients(patient_id) ON DELETE CASCADE,
-  FOREIGN KEY (generated_by_user_id) REFERENCES Users(user_id) ON DELETE CASCADE
+  FOREIGN KEY (patient_id) REFERENCES Patients(patient_id) ON DELETE RESTRICT,
+  FOREIGN KEY (generated_by_user_id) REFERENCES Users(user_id) ON DELETE RESTRICT
 );
 
 -- ============================================
@@ -155,12 +165,13 @@ CREATE TABLE Discharges (
   final_diagnosis TEXT,
   medications_prescribed TEXT,
   instructions TEXT,
-  FOREIGN KEY (admission_id) REFERENCES Admissions(admission_id) ON DELETE CASCADE
+  FOREIGN KEY (admission_id) REFERENCES Admissions(admission_id) ON DELETE RESTRICT
 );
 
 -- ============================================
 -- Table 10: FollowUps
--- Purpose: Scheduled follow-up appointments after outpatient consultation or hospital discharge
+-- Purpose: Scheduled follow-up appointments after outpatient
+--          consultation or hospital discharge
 -- ============================================
 CREATE TABLE FollowUps (
   followup_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -172,9 +183,9 @@ CREATE TABLE FollowUps (
   notes TEXT,
   status ENUM('Scheduled', 'Completed', 'Cancelled') DEFAULT 'Scheduled',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (discharge_id) REFERENCES Discharges(discharge_id) ON DELETE CASCADE,
-  FOREIGN KEY (patient_id) REFERENCES Patients(patient_id) ON DELETE CASCADE,
-  FOREIGN KEY (doctor_id) REFERENCES Doctors(doctor_id) ON DELETE CASCADE
+  FOREIGN KEY (discharge_id) REFERENCES Discharges(discharge_id) ON DELETE RESTRICT,
+  FOREIGN KEY (patient_id) REFERENCES Patients(patient_id) ON DELETE RESTRICT,
+  FOREIGN KEY (doctor_id) REFERENCES Doctors(doctor_id) ON DELETE RESTRICT
 );
 
 -- ============================================
@@ -190,7 +201,7 @@ CREATE TABLE ActivityLogs (
   description TEXT,
   ip_address VARCHAR(45),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
+  FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE RESTRICT
 );
 
 -- ============================================
