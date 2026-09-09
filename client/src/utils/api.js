@@ -162,3 +162,134 @@ export const searchPatients = async (query) => {
 
   return data;
 };
+
+
+// ============================================
+// Doctor API
+// ============================================
+
+/**
+ * Get all doctors
+ */
+export const getAllDoctors = async () => {
+  const response = await fetch(`${API_BASE_URL}/doctors`, {
+    headers: getAuthHeaders(),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch doctors');
+  }
+
+  return data;
+};
+
+/**
+ * Get doctor by ID
+ */
+export const getDoctorById = async (id) => {
+  const response = await fetch(`${API_BASE_URL}/doctors/${id}`, {
+    headers: getAuthHeaders(),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch doctor');
+  }
+
+  return data;
+};
+
+// ============================================
+// Appointment API
+// ============================================
+
+/**
+ * Get all appointments
+ */
+export const getAllAppointments = async () => {
+  const response = await fetch(`${API_BASE_URL}/appointments`, {
+    headers: getAuthHeaders(),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch appointments');
+  }
+
+  return data;
+};
+
+/**
+ * Get today's appointments
+ */
+export const getTodayAppointments = async () => {
+  const response = await fetch(`${API_BASE_URL}/appointments/today`, {
+    headers: getAuthHeaders(),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch today\'s appointments');
+  }
+
+  return data;
+};
+
+/**
+ * Get appointment by ID
+ */
+export const getAppointmentById = async (id) => {
+  const response = await fetch(`${API_BASE_URL}/appointments/${id}`, {
+    headers: getAuthHeaders(),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch appointment');
+  }
+
+  return data;
+};
+
+/**
+ * Create new appointment
+ */
+export const createAppointment = async (appointmentData) => {
+  const response = await fetch(`${API_BASE_URL}/appointments`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: JSON.stringify(appointmentData),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to create appointment');
+  }
+
+  return data;
+};
+
+/**
+ * Check in appointment
+ */
+export const checkInAppointment = async (id) => {
+  const response = await fetch(`${API_BASE_URL}/appointments/${id}/check-in`, {
+    method: 'PUT',
+    headers: getAuthHeaders(),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to check in appointment');
+  }
+
+  return data;
+};

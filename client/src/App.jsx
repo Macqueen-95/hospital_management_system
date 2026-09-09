@@ -6,6 +6,10 @@ import PatientListPage from './pages/PatientListPage';
 import RegisterPatientPage from './pages/RegisterPatientPage';
 import PatientDetailsPage from './pages/PatientDetailsPage';
 import EditPatientPage from './pages/EditPatientPage';
+import AppointmentListPage from './pages/AppointmentListPage';
+import BookAppointmentPage from './pages/BookAppointmentPage';
+import TodayAppointmentsPage from './pages/TodayAppointmentsPage';
+import AppointmentDetailsPage from './pages/AppointmentDetailsPage';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -51,6 +55,38 @@ function App() {
             element={
               <ProtectedRoute>
                 <EditPatientPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/appointments"
+            element={
+              <ProtectedRoute>
+                <AppointmentListPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/appointments/new"
+            element={
+              <ProtectedRoute>
+                <BookAppointmentPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/appointments/today"
+            element={
+              <ProtectedRoute>
+                <TodayAppointmentsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/appointments/:id"
+            element={
+              <ProtectedRoute>
+                <AppointmentDetailsPage />
               </ProtectedRoute>
             }
           />

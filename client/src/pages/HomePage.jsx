@@ -66,17 +66,41 @@ const HomePage = () => {
             </button>
           </div>
 
+          {/* Appointment Management */}
+          <div className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition">
+            <div className="flex items-center mb-4">
+              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4">
+                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold text-gray-800">Appointments</h3>
+            </div>
+            <p className="text-gray-600 mb-4">
+              {user?.role === 'Doctor'
+                ? 'View and manage your appointments'
+                : 'Book and manage patient appointments'
+              }
+            </p>
+            <button
+              onClick={() => navigate(user?.role === 'Doctor' ? '/appointments/today' : '/appointments')}
+              className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+            >
+              {user?.role === 'Doctor' ? "Today's Appointments" : 'Manage Appointments'}
+            </button>
+          </div>
+
           {/* Placeholder modules */}
           <div className="bg-gray-100 rounded-xl shadow-md p-6 opacity-50">
             <div className="flex items-center mb-4">
               <div className="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center mr-4">
                 <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold text-gray-600">Appointments</h3>
+              <h3 className="text-xl font-semibold text-gray-600">Consultation</h3>
             </div>
-            <p className="text-gray-500 mb-4">Coming in Phase 7</p>
+            <p className="text-gray-500 mb-4">Coming in Phase 6</p>
             <button disabled className="w-full px-4 py-2 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed">
               Not Available
             </button>
@@ -91,7 +115,7 @@ const HomePage = () => {
               </div>
               <h3 className="text-xl font-semibold text-gray-600">Billing</h3>
             </div>
-            <p className="text-gray-500 mb-4">Coming in Phase 10</p>
+            <p className="text-gray-500 mb-4">Coming in Phase 9</p>
             <button disabled className="w-full px-4 py-2 bg-gray-300 text-gray-500 rounded-lg cursor-not-allowed">
               Not Available
             </button>
