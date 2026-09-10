@@ -293,3 +293,61 @@ export const checkInAppointment = async (id) => {
 
   return data;
 };
+
+
+// ============================================
+// Consultation API
+// ============================================
+
+/**
+ * Get patient history for consultation
+ */
+export const getPatientHistory = async (appointmentId) => {
+  const response = await fetch(`${API_BASE_URL}/appointments/${appointmentId}/patient-history`, {
+    headers: getAuthHeaders(),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch patient history');
+  }
+
+  return data;
+};
+
+/**
+ * Get consultation for appointment
+ */
+export const getConsultation = async (appointmentId) => {
+  const response = await fetch(`${API_BASE_URL}/appointments/${appointmentId}/consultation`, {
+    headers: getAuthHeaders(),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch consultation');
+  }
+
+  return data;
+};
+
+/**
+ * Create consultation
+ */
+export const createConsultation = async (appointmentId, consultationData) => {
+  const response = await fetch(`${API_BASE_URL}/appointments/${appointmentId}/consultation`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: JSON.stringify(consultationData),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to create consultation');
+  }
+
+  return data;
+};

@@ -145,6 +145,22 @@ const AppointmentDetailsPage = () => {
                   {checkingIn ? 'Checking In...' : 'Check In Patient'}
                 </button>
               )}
+              {user?.role === 'Doctor' && appointment.status === 'Checked In' && (
+                <button
+                  onClick={() => navigate(`/appointments/${id}/consultation`)}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                >
+                  Start Consultation
+                </button>
+              )}
+              {user?.role === 'Doctor' && appointment.status === 'Completed' && (
+                <button
+                  onClick={() => navigate(`/appointments/${id}/consultation`)}
+                  className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition"
+                >
+                  View Consultation
+                </button>
+              )}
             </div>
           </div>
         </div>

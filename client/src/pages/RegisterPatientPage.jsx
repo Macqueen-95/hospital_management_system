@@ -1,7 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
 import { registerPatient } from '../utils/api';
+import Layout from '../components/Layout';
+import Input from '../components/Input';
+import Select from '../components/Select';
+import Button from '../components/Button';
+import Alert from '../components/Alert';
+import { Save, X } from 'lucide-react';
 
 const RegisterPatientPage = () => {
   const [formData, setFormData] = useState({
@@ -19,7 +24,6 @@ const RegisterPatientPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   
-  const { logout } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -36,7 +40,6 @@ const RegisterPatientPage = () => {
 
     try {
       const result = await registerPatient(formData);
-      // Redirect to patient details page
       navigate(`/patients/${result.patient.patient_id}`);
     } catch (err) {
       setError(err.message || 'Failed to register patient');
@@ -46,166 +49,115 @@ const RegisterPatientPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <Layout>
       
-      {/* Header */}
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <div className="flex items-center space-x-4">
-            <button
-              onClick={() => navigate('/patients')}
-              className="text-gray-600 hover:text-gray-800"
-            >
-              ← Back to Patients
-            </button>
-            <h1 className="text-2xl font-bold text-gray-800">Register New Patient</h1>
-          </div>
-          <button
-            onClick={() => { logout(); navigate('/login'); }}
-            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
-          >
-            Logout
-          </button>
+      {error && (
+        <div className="mb-6">
+          <Alert type="error">{error}</Alert>
         </div>
-      </header>
+      )}
 
-      <main className="max-w-4xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-        
-        {/* Error Message */}
-        {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-            <p className="text-red-600">{error}</p>
+      <div className="max-w-4xl">
+        <div className="bg-white rounded-lg border border-slate-200 shadow-sm">
+          
+          <div className="px-6 py-4 border-b border-slate-200">
+            <h2 className="text-lg font-semibold text-slate-800">Register New Patient</h2>
+            <p className="text-sm text-slate-500 mt-1">Enter patient information to create a new record</p>
           </div>
-        )}
 
-        {/* Registration Form */}
-        <div className="bg-white rounded-xl shadow-md p-8">
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="p-6 space-y-8">
             
             {/* Personal Information */}
             <div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Personal Information</h3>
+              <h3 className="text-base font-semibold text-slate-800 mb-4">Personal Information</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    First Name <span className="text-red-600">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    name="first_name"
-                    value={formData.first_name}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  />
-                </div>
+                <Input
+                  label="First Name"
+                  name="first_name"
+                  value={formData.first_name}
+                  onChange={handleChange}
+                  required
+                  placeholder="Enter first name"
+                />
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Last Name <span className="text-red-600">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    name="last_name"
-                    value={formData.last_name}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  />
-                </div>
+                <Input
+                  label="Last Name"
+                  name="last_name"
+                  value={formData.last_name}
+                  onChange={handleChange}
+                  required
+                  placeholder="Enter last name"
+                />
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Date of Birth <span className="text-red-600">*</span>
-                  </label>
-                  <input
-                    type="date"
-                    name="date_of_birth"
-                    value={formData.date_of_birth}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  />
-                </div>
+                <Input
+                  label="Date of Birth"
+                  type="date"
+                  name="date_of_birth"
+                  value={formData.date_of_birth}
+                  onChange={handleChange}
+                  required
+                />
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Gender <span className="text-red-600">*</span>
-                  </label>
-                  <select
-                    name="gender"
-                    value={formData.gender}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  >
-                    <option value="">Select Gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </div>
+                <Select
+                  label="Gender"
+                  name="gender"
+                  value={formData.gender}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="">Select Gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </Select>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Blood Group
-                  </label>
-                  <select
-                    name="blood_group"
-                    value={formData.blood_group}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  >
-                    <option value="">Select Blood Group</option>
-                    <option value="A+">A+</option>
-                    <option value="A-">A-</option>
-                    <option value="B+">B+</option>
-                    <option value="B-">B-</option>
-                    <option value="AB+">AB+</option>
-                    <option value="AB-">AB-</option>
-                    <option value="O+">O+</option>
-                    <option value="O-">O-</option>
-                  </select>
-                </div>
+                <Select
+                  label="Blood Group"
+                  name="blood_group"
+                  value={formData.blood_group}
+                  onChange={handleChange}
+                >
+                  <option value="">Select Blood Group</option>
+                  <option value="A+">A+</option>
+                  <option value="A-">A-</option>
+                  <option value="B+">B+</option>
+                  <option value="B-">B-</option>
+                  <option value="AB+">AB+</option>
+                  <option value="AB-">AB-</option>
+                  <option value="O+">O+</option>
+                  <option value="O-">O-</option>
+                </Select>
 
               </div>
             </div>
 
             {/* Contact Information */}
             <div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Contact Information</h3>
+              <h3 className="text-base font-semibold text-slate-800 mb-4">Contact Information</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Phone <span className="text-red-600">*</span>
-                  </label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  />
-                </div>
+                <Input
+                  label="Phone"
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  required
+                  placeholder="Enter phone number"
+                />
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  />
-                </div>
+                <Input
+                  label="Email"
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="Enter email (optional)"
+                />
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-slate-700 mb-2">
                     Address
                   </label>
                   <textarea
@@ -213,7 +165,8 @@ const RegisterPatientPage = () => {
                     value={formData.address}
                     onChange={handleChange}
                     rows="3"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    placeholder="Enter full address"
+                    className="w-full px-4 py-2.5 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
 
@@ -222,61 +175,55 @@ const RegisterPatientPage = () => {
 
             {/* Emergency Contact */}
             <div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Emergency Contact</h3>
+              <h3 className="text-base font-semibold text-slate-800 mb-4">Emergency Contact</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Emergency Contact Name
-                  </label>
-                  <input
-                    type="text"
-                    name="emergency_contact_name"
-                    value={formData.emergency_contact_name}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  />
-                </div>
+                <Input
+                  label="Emergency Contact Name"
+                  name="emergency_contact_name"
+                  value={formData.emergency_contact_name}
+                  onChange={handleChange}
+                  placeholder="Enter contact name"
+                />
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Emergency Contact Phone
-                  </label>
-                  <input
-                    type="tel"
-                    name="emergency_contact_phone"
-                    value={formData.emergency_contact_phone}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  />
-                </div>
+                <Input
+                  label="Emergency Contact Phone"
+                  type="tel"
+                  name="emergency_contact_phone"
+                  value={formData.emergency_contact_phone}
+                  onChange={handleChange}
+                  placeholder="Enter contact phone"
+                />
 
               </div>
             </div>
 
-            {/* Submit Button */}
-            <div className="flex space-x-4 pt-4">
-              <button
+            {/* Action Buttons */}
+            <div className="flex gap-3 pt-4 border-t border-slate-200">
+              <Button
                 type="submit"
-                disabled={loading}
-                className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                variant="primary"
+                loading={loading}
+                icon={Save}
+                className="flex-1"
               >
                 {loading ? 'Registering...' : 'Register Patient'}
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
                 onClick={() => navigate('/patients')}
-                className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium"
+                variant="secondary"
+                icon={X}
               >
                 Cancel
-              </button>
+              </Button>
             </div>
 
           </form>
         </div>
+      </div>
 
-      </main>
-    </div>
+    </Layout>
   );
 };
 

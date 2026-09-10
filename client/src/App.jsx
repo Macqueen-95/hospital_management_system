@@ -10,6 +10,7 @@ import AppointmentListPage from './pages/AppointmentListPage';
 import BookAppointmentPage from './pages/BookAppointmentPage';
 import TodayAppointmentsPage from './pages/TodayAppointmentsPage';
 import AppointmentDetailsPage from './pages/AppointmentDetailsPage';
+import ConsultationPage from './pages/ConsultationPage';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -35,12 +36,16 @@ function App() {
             }
           />
           <Route
-            path="/patients/new"
+            path="/patients/register"
             element={
               <ProtectedRoute>
                 <RegisterPatientPage />
               </ProtectedRoute>
             }
+          />
+          <Route
+            path="/patients/new"
+            element={<Navigate to="/patients/register" replace />}
           />
           <Route
             path="/patients/:id"
@@ -67,12 +72,16 @@ function App() {
             }
           />
           <Route
-            path="/appointments/new"
+            path="/appointments/book"
             element={
               <ProtectedRoute>
                 <BookAppointmentPage />
               </ProtectedRoute>
             }
+          />
+          <Route
+            path="/appointments/new"
+            element={<Navigate to="/appointments/book" replace />}
           />
           <Route
             path="/appointments/today"
@@ -87,6 +96,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <AppointmentDetailsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/appointments/:id/consultation"
+            element={
+              <ProtectedRoute>
+                <ConsultationPage />
               </ProtectedRoute>
             }
           />
