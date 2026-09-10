@@ -58,12 +58,12 @@ const Layout = ({ children }) => {
         className={`
           w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors
           ${active 
-            ? 'bg-blue-50 text-blue-700 font-medium' 
-            : 'text-slate-700 hover:bg-slate-50'
+            ? 'bg-[#e3f7ef] text-[#13805d] font-semibold' 
+            : 'text-[#53636c] hover:bg-[#f4f7f4] hover:text-[#18232c]'
           }
         `}
       >
-        <Icon size={20} className={active ? 'text-blue-600' : 'text-slate-500'} />
+        <Icon size={19} className={active ? 'text-[#13805d]' : 'text-[#82928c]'} />
         <span className="text-sm">{item.name}</span>
         {active && <ChevronRight size={16} className="ml-auto" />}
       </button>
@@ -71,38 +71,39 @@ const Layout = ({ children }) => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[#f4f7f4]">
       
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
         <div 
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          className="fixed inset-0 bg-[#18232c]/60 backdrop-blur-sm z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
       <aside className={`
-        fixed top-0 left-0 h-full w-64 bg-white border-r border-slate-200 z-50 transition-transform duration-300
+        fixed top-0 left-0 h-full w-64 bg-white border-r border-[#dce6e1] z-50 transition-transform duration-300
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
         <div className="flex flex-col h-full">
           
           {/* Logo */}
-          <div className="p-6 border-b border-slate-200">
+          <div className="p-6 border-b border-[#e7efeb]">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                <Stethoscope size={24} className="text-white" />
+              <div className="w-11 h-11 bg-[#e3f7ef] rounded-xl flex items-center justify-center">
+                <Stethoscope size={23} className="text-[#13805d]" />
               </div>
               <div>
-                <h1 className="text-lg font-bold text-slate-800">HMS</h1>
-                <p className="text-xs text-slate-500">Hospital System</p>
+                <h1 className="text-lg font-extrabold tracking-tight text-[#18232c]">HMS</h1>
+                <p className="text-[0.65rem] uppercase tracking-[0.14em] text-[#82928c]">Care operations</p>
               </div>
             </div>
           </div>
 
           {/* Navigation */}
           <nav className="flex-1 p-4 overflow-y-auto">
+            <p className="px-4 mb-3 text-[0.65rem] font-bold uppercase tracking-[0.16em] text-[#82928c]">Workspace</p>
             <div className="space-y-1">
               {navigationItems.map((item) => (
                 <NavItem key={item.path} item={item} mobile={true} />
@@ -111,19 +112,19 @@ const Layout = ({ children }) => {
           </nav>
 
           {/* User Section */}
-          <div className="p-4 border-t border-slate-200">
+          <div className="p-4 border-t border-[#e7efeb]">
             <div className="flex items-center gap-3 mb-3 px-2">
-              <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center">
-                <UserCog size={20} className="text-slate-600" />
+              <div className="w-10 h-10 bg-[#f0f5f2] rounded-full flex items-center justify-center">
+                <UserCog size={19} className="text-[#53636c]" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-slate-800 truncate">{user?.full_name}</p>
-                <p className="text-xs text-slate-500">{user?.role}</p>
+                <p className="text-sm font-semibold text-[#18232c] truncate">{user?.full_name}</p>
+                <p className="text-xs text-[#82928c]">{user?.role}</p>
               </div>
             </div>
             <button
               onClick={handleLogout}
-              className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+              className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-[#c05b48] hover:bg-[#ffebe7] rounded-lg transition-colors"
             >
               <LogOut size={18} />
               <span>Logout</span>
@@ -137,20 +138,20 @@ const Layout = ({ children }) => {
       <div className="lg:pl-64">
         
         {/* Top Header */}
-        <header className="sticky top-0 z-30 bg-white border-b border-slate-200">
+        <header className="sticky top-0 z-30 bg-white border-b border-[#dce6e1]">
           <div className="flex items-center justify-between px-4 py-4 lg:px-8">
             
             {/* Mobile Menu Button */}
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="lg:hidden p-2 hover:bg-slate-100 rounded-lg transition-colors"
+              className="lg:hidden p-2 hover:bg-white rounded-xl transition-colors"
             >
               {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
 
             {/* Page Title - Hidden on mobile, shown on desktop */}
             <div className="hidden lg:block">
-              <h2 className="text-xl font-semibold text-slate-800">
+              <h2 className="text-xl font-extrabold tracking-[-0.03em] text-[#18232c]">
                 {navigationItems.find(item => isActive(item.path))?.name || 'Dashboard'}
               </h2>
             </div>
@@ -165,11 +166,11 @@ const Layout = ({ children }) => {
             {/* User Info - Desktop */}
             <div className="hidden lg:flex items-center gap-4">
               <div className="text-right">
-                <p className="text-sm font-medium text-slate-800">{user?.full_name}</p>
-                <p className="text-xs text-slate-500">{user?.role}</p>
+                <p className="text-sm font-bold text-[#18232c]">{user?.full_name}</p>
+                <p className="text-xs text-[#6b7b83]">{user?.role}</p>
               </div>
-              <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center">
-                <UserCog size={20} className="text-slate-600" />
+              <div className="w-10 h-10 bg-white border border-[#dce6e1] rounded-full flex items-center justify-center">
+                <UserCog size={20} className="text-[#53636c]" />
               </div>
             </div>
 

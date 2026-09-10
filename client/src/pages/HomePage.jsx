@@ -89,10 +89,10 @@ const HomePage = () => {
 
   const getColorClasses = (color) => {
     const colors = {
-      blue: 'bg-blue-100 text-blue-600',
-      green: 'bg-green-100 text-green-600',
-      purple: 'bg-purple-100 text-purple-600',
-      amber: 'bg-amber-100 text-amber-600',
+      blue: 'bg-[#e3f7ef] text-[#13805d]',
+      green: 'bg-[#fff2d8] text-[#b27a1c]',
+      purple: 'bg-[#eef0ff] text-[#6578c5]',
+      amber: 'bg-[#ffebe7] text-[#c05b48]',
     };
     return colors[color] || colors.blue;
   };
@@ -102,24 +102,25 @@ const HomePage = () => {
       
       {/* Welcome Section */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-800 mb-2">
+        <p className="text-sm font-semibold text-[#13805d] mb-2">Dashboard overview</p>
+        <h1 className="text-3xl font-extrabold tracking-[-0.035em] text-[#18232c] mb-2">
           {getGreeting()}, {user?.full_name}!
         </h1>
-        <p className="text-slate-600">
-          Welcome to your {user?.role} dashboard
+        <p className="text-[#6b7b83]">
+          Your {user?.role.toLowerCase()} dashboard is ready for the day.
         </p>
       </div>
 
       {/* Quick Stats - Optional if we had real data */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
         <Card>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-slate-600 mb-1">Your Role</p>
-              <p className="text-2xl font-bold text-slate-800">{user?.role}</p>
+              <p className="text-[0.68rem] font-bold uppercase tracking-[0.12em] text-[#6b7b83] mb-2">Your role</p>
+              <p className="text-2xl font-extrabold tracking-[-0.03em] text-[#18232c]">{user?.role}</p>
             </div>
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-              <Users className="text-blue-600" size={24} />
+            <div className="w-12 h-12 bg-[#e3f7ef] rounded-2xl flex items-center justify-center">
+              <Users className="text-[#13805d]" size={24} />
             </div>
           </div>
         </Card>
@@ -127,11 +128,11 @@ const HomePage = () => {
         <Card>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-slate-600 mb-1">Status</p>
-              <p className="text-2xl font-bold text-green-600">Active</p>
+              <p className="text-[0.68rem] font-bold uppercase tracking-[0.12em] text-[#6b7b83] mb-2">Status</p>
+              <p className="text-2xl font-extrabold tracking-[-0.03em] text-[#13805d]">Active</p>
             </div>
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-              <Clock className="text-green-600" size={24} />
+            <div className="w-12 h-12 bg-[#fff2d8] rounded-2xl flex items-center justify-center">
+              <Clock className="text-[#b27a1c]" size={24} />
             </div>
           </div>
         </Card>
@@ -139,11 +140,11 @@ const HomePage = () => {
         <Card>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-slate-600 mb-1">Quick Access</p>
-              <p className="text-2xl font-bold text-slate-800">{quickActions.length}</p>
+              <p className="text-[0.68rem] font-bold uppercase tracking-[0.12em] text-[#6b7b83] mb-2">Quick access</p>
+              <p className="text-2xl font-extrabold tracking-[-0.03em] text-[#18232c]">{quickActions.length}</p>
             </div>
-            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-              <Stethoscope className="text-purple-600" size={24} />
+            <div className="w-12 h-12 bg-[#eef0ff] rounded-2xl flex items-center justify-center">
+              <Stethoscope className="text-[#6578c5]" size={24} />
             </div>
           </div>
         </Card>
@@ -151,20 +152,26 @@ const HomePage = () => {
 
       {/* Quick Actions */}
       <div>
-        <h2 className="text-xl font-semibold text-slate-800 mb-4">Quick Actions</h2>
+        <div className="flex items-end justify-between mb-5">
+          <div>
+            <p className="text-sm font-semibold text-[#13805d] mb-1">Shortcuts</p>
+            <h2 className="text-xl font-bold text-[#18232c]">Quick actions</h2>
+          </div>
+          <span className="hidden sm:block text-xs text-[#8a9a94]">{quickActions.length} available</span>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {quickActions.map((action, index) => {
             const Icon = action.icon;
             return (
-              <Card key={index} className="hover:shadow-md transition-shadow">
+              <Card key={index} className="group hover:shadow-md transition-shadow">
                 <div className="flex flex-col h-full">
-                  <div className={`w-12 h-12 rounded-lg flex items-center justify-center mb-4 ${getColorClasses(action.color)}`}>
+                  <div className={`w-11 h-11 rounded-xl flex items-center justify-center mb-4 ${getColorClasses(action.color)}`}>
                     <Icon size={24} />
                   </div>
-                  <h3 className="text-lg font-semibold text-slate-800 mb-2">
+                  <h3 className="text-lg font-bold text-[#18232c] mb-2">
                     {action.title}
                   </h3>
-                  <p className="text-sm text-slate-600 mb-4 flex-grow">
+                  <p className="text-sm leading-6 text-[#6b7b83] mb-5 flex-grow">
                     {action.description}
                   </p>
                   <Button

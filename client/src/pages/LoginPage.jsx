@@ -32,44 +32,43 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-slate-50 flex">
+    <div className="min-h-screen bg-[#f4f7f4] flex">
       
       {/* Left Side - Branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 to-blue-800 p-12 items-center justify-center">
-        <div className="max-w-md text-white">
+      <div className="hidden lg:flex lg:w-[47%] bg-[#e3f7ef] p-14 items-center justify-center">
+        <div className="max-w-md text-[#18232c]">
           <div className="flex items-center gap-3 mb-8">
-            <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-              <Stethoscope size={32} className="text-white" />
+            <div className="w-14 h-14 bg-[#20b486] rounded-2xl flex items-center justify-center">
+              <Stethoscope size={30} className="text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold">HMS</h1>
-              <p className="text-blue-100 text-sm">Hospital Management System</p>
+              <h1 className="text-3xl font-extrabold tracking-tight">HMS</h1>
+              <p className="text-[#13805d] text-xs uppercase tracking-[0.16em]">Care operations</p>
             </div>
           </div>
-          <h2 className="text-4xl font-bold mb-6 leading-tight">
-            Modern Healthcare Administration Platform
+          <h2 className="text-4xl font-extrabold tracking-[-0.045em] mb-5 leading-[1.1]">
+            A clearer way to manage care.
           </h2>
-          <p className="text-blue-100 text-lg leading-relaxed">
-            Streamline patient registration, appointment scheduling, consultation records, 
-            and medical workflows with our comprehensive hospital management solution.
+          <p className="text-[#53636c] text-base leading-7">
+            Keep patient records, schedules, and consultations organized in one focused place.
           </p>
           <div className="mt-12 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center">
-                <Hospital size={20} />
+              <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center">
+                <Hospital size={20} className="text-[#13805d]" />
               </div>
               <div>
                 <p className="font-medium">Patient Management</p>
-                <p className="text-sm text-blue-100">Complete patient records & history</p>
+                <p className="text-sm text-[#53636c]">Complete patient records & history</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center">
-                <Stethoscope size={20} />
+              <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center">
+                <Stethoscope size={20} className="text-[#13805d]" />
               </div>
               <div>
                 <p className="font-medium">Clinical Workflow</p>
-                <p className="text-sm text-blue-100">Appointments & consultations</p>
+                <p className="text-sm text-[#53636c]">Appointments & consultations</p>
               </div>
             </div>
           </div>
@@ -77,26 +76,27 @@ const LoginPage = () => {
       </div>
 
       {/* Right Side - Login Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
+      <div className="w-full lg:w-[53%] flex items-center justify-center p-6 sm:p-10">
         <div className="w-full max-w-md">
           
           {/* Mobile Logo */}
           <div className="lg:hidden flex items-center gap-3 mb-8">
-            <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center">
-              <Stethoscope size={24} className="text-white" />
+            <div className="w-12 h-12 bg-[#20b486] rounded-2xl flex items-center justify-center">
+              <Stethoscope size={24} className="text-[#10251e]" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-slate-800">HMS</h1>
-              <p className="text-sm text-slate-500">Hospital Management System</p>
+              <h1 className="text-2xl font-extrabold text-[#18232c]">HMS</h1>
+              <p className="text-xs uppercase tracking-[0.12em] text-[#6b7b83]">Care operations</p>
             </div>
           </div>
 
           {/* Login Card */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-lg p-8">
+          <div className="bg-white rounded-2xl border border-[#dce6e1] shadow-[0_12px_35px_rgba(24,35,44,0.07)] p-8 sm:p-10">
             
             <div className="mb-8">
-              <h2 className="text-2xl font-bold text-slate-800 mb-2">Welcome Back</h2>
-              <p className="text-slate-600">Sign in to access your dashboard</p>
+              <p className="font-mono text-xs uppercase tracking-[0.16em] text-[#13805d] mb-3">Secure sign in</p>
+              <h2 className="text-3xl font-extrabold tracking-[-0.04em] text-[#18232c] mb-2">Welcome back</h2>
+              <p className="text-[#6b7b83]">Sign in to access your workspace.</p>
             </div>
 
             {error && (
@@ -142,8 +142,8 @@ const LoginPage = () => {
           </div>
 
           {/* Footer Note */}
-          <p className="text-center text-sm text-slate-500 mt-6">
-            Secure hospital administration platform
+          <p className="text-center text-sm text-[#8a9a94] mt-6">
+            Protected access for care teams
           </p>
 
         </div>
