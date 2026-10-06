@@ -13,6 +13,8 @@ const admissionRoutes = require('./routes/admissionRoutes');
 const billingRoutes = require('./routes/billingRoutes');
 const dischargeRoutes = require('./routes/dischargeRoutes');
 const followupRoutes = require('./routes/followupRoutes');
+const activityLogRoutes = require('./routes/activityLogRoutes');
+const reportRoutes = require('./routes/reportRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -56,6 +58,12 @@ app.use('/api/bills', billingRoutes);
 
 // Mount follow-up routes under /api/followups (MUST come before generic /api discharge routes)
 app.use('/api/followups', followupRoutes);
+
+// Mount activity log routes under /api/activity-logs (Admin only)
+app.use('/api/activity-logs', activityLogRoutes);
+
+// Mount report routes under /api/reports (Admin only)
+app.use('/api/reports', reportRoutes);
 
 // Mount discharge routes under /api/discharges and /api/admissions
 app.use('/api/discharges', dischargeRoutes);

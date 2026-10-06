@@ -23,6 +23,8 @@ import DischargeDetailsPage from './pages/DischargeDetailsPage';
 import FollowUpListPage from './pages/FollowUpListPage';
 import FollowUpDetailsPage from './pages/FollowUpDetailsPage';
 import ScheduleFollowUpPage from './pages/ScheduleFollowUpPage';
+import ActivityLogsPage from './pages/ActivityLogsPage';
+import ReportsPage from './pages/ReportsPage';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -212,6 +214,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <FollowUpDetailsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/activity-logs"
+            element={
+              <ProtectedRoute allowedRoles={['Admin']}>
+                <ActivityLogsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/reports"
+            element={
+              <ProtectedRoute allowedRoles={['Admin']}>
+                <ReportsPage />
               </ProtectedRoute>
             }
           />

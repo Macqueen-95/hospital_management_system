@@ -689,3 +689,52 @@ export const updateFollowUpStatus = async (followupId, status) => {
 
   return data;
 };
+
+// ==================== ACTIVITY LOGS ====================
+
+/**
+ * Get activity logs with optional filters
+ */
+export const getActivityLogs = async (filters = {}) => {
+  const queryParams = new URLSearchParams();
+  
+  if (filters.user) queryParams.append('user', filters.user);
+  if (filters.action) queryParams.append('action', filters.action);
+  if (filters.entity_type) queryParams.append('entity_type', filters.entity_type);
+  if (filters.date) queryParams.append('date', filters.date);
+  if (filters.page) queryParams.append('page', filters.page);
+  if (filters.limit) queryParams.append('limit', filters.limit);
+
+  const url = `${API_BASE_URL}/activity-logs${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
+  
+  const response = await fetch(url, {
+    headers: getAuthHeaders()
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch activity logs');
+  }
+
+  return data;
+};
+
+// ==================== REPORTS ====================
+
+/**
+ * Get report summary
+ */
+export const getReportSummary = async () => {
+  const response = await fetch(`${API_BASE_URL}/reports/summary`, {
+    headers: getAuthHeaders()
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch report summary');
+  }
+
+  return data;
+};
