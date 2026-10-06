@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { 
   Home, Users, Calendar, UserPlus, CalendarPlus, Stethoscope, 
-  UserCog, LogOut, Menu, X, ChevronRight 
+  UserCog, LogOut, Menu, X, ChevronRight, Building2, Bed, Receipt, FileText
 } from 'lucide-react';
 
 const Layout = ({ children }) => {
@@ -29,12 +29,19 @@ const Layout = ({ children }) => {
         { name: 'Register Patient', path: '/patients/register', icon: UserPlus, roles: ['Admin', 'Receptionist'] },
         { name: 'Appointments', path: '/appointments', icon: Calendar, roles: ['Admin', 'Receptionist'] },
         { name: 'Book Appointment', path: '/appointments/book', icon: CalendarPlus, roles: ['Admin', 'Receptionist'] },
+        { name: 'Rooms', path: '/rooms', icon: Building2, roles: ['Admin', 'Receptionist'] },
+        { name: 'Admissions', path: '/admissions', icon: Bed, roles: ['Admin', 'Receptionist'] },
+        { name: 'Billing', path: '/bills', icon: Receipt, roles: ['Admin', 'Receptionist'] },
+        { name: 'Discharges', path: '/discharges', icon: FileText, roles: ['Admin', 'Receptionist'] },
       );
     }
 
     if (user?.role === 'Doctor') {
       baseItems.push(
         { name: "Today's Appointments", path: '/appointments/today', icon: Stethoscope, roles: ['Doctor'] },
+        { name: 'Rooms', path: '/rooms', icon: Building2, roles: ['Doctor'] },
+        { name: 'Admissions', path: '/admissions', icon: Bed, roles: ['Doctor'] },
+        { name: 'Discharges', path: '/discharges', icon: FileText, roles: ['Doctor'] },
       );
     }
 

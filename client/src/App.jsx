@@ -11,6 +11,15 @@ import BookAppointmentPage from './pages/BookAppointmentPage';
 import TodayAppointmentsPage from './pages/TodayAppointmentsPage';
 import AppointmentDetailsPage from './pages/AppointmentDetailsPage';
 import ConsultationPage from './pages/ConsultationPage';
+import RoomListPage from './pages/RoomListPage';
+import AdmissionListPage from './pages/AdmissionListPage';
+import CreateAdmissionPage from './pages/CreateAdmissionPage';
+import AdmissionDetailsPage from './pages/AdmissionDetailsPage';
+import BillingListPage from './pages/BillingListPage';
+import GenerateBillPage from './pages/GenerateBillPage';
+import BillDetailsPage from './pages/BillDetailsPage';
+import DischargeListPage from './pages/DischargeListPage';
+import DischargeDetailsPage from './pages/DischargeDetailsPage';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -104,6 +113,78 @@ function App() {
             element={
               <ProtectedRoute>
                 <ConsultationPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/rooms"
+            element={
+              <ProtectedRoute>
+                <RoomListPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admissions"
+            element={
+              <ProtectedRoute>
+                <AdmissionListPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admissions/new"
+            element={
+              <ProtectedRoute>
+                <CreateAdmissionPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admissions/:id"
+            element={
+              <ProtectedRoute>
+                <AdmissionDetailsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/bills"
+            element={
+              <ProtectedRoute>
+                <BillingListPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/bills/new"
+            element={
+              <ProtectedRoute>
+                <GenerateBillPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/bills/:id"
+            element={
+              <ProtectedRoute>
+                <BillDetailsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/discharges"
+            element={
+              <ProtectedRoute>
+                <DischargeListPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/discharges/:id"
+            element={
+              <ProtectedRoute>
+                <DischargeDetailsPage />
               </ProtectedRoute>
             }
           />

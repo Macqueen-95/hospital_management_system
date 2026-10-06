@@ -8,6 +8,10 @@ const patientRoutes = require('./routes/patientRoutes');
 const doctorRoutes = require('./routes/doctorRoutes');
 const appointmentRoutes = require('./routes/appointmentRoutes');
 const consultationRoutes = require('./routes/consultationRoutes');
+const roomRoutes = require('./routes/roomRoutes');
+const admissionRoutes = require('./routes/admissionRoutes');
+const billingRoutes = require('./routes/billingRoutes');
+const dischargeRoutes = require('./routes/dischargeRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -39,6 +43,19 @@ app.use('/api/appointments', appointmentRoutes);
 
 // Mount consultation routes under /api/appointments (nested)
 app.use('/api/appointments', consultationRoutes);
+
+// Mount room routes under /api/rooms
+app.use('/api/rooms', roomRoutes);
+
+// Mount admission routes under /api/admissions
+app.use('/api/admissions', admissionRoutes);
+
+// Mount billing routes under /api/bills
+app.use('/api/bills', billingRoutes);
+
+// Mount discharge routes under /api/discharges and /api/admissions
+app.use('/api/discharges', dischargeRoutes);
+app.use('/api', dischargeRoutes);
 
 // Handle requests to undefined routes
 app.use((req, res) => {

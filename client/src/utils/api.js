@@ -351,3 +351,265 @@ export const createConsultation = async (appointmentId, consultationData) => {
 
   return data;
 };
+
+// ============================================
+// Room API
+// ============================================
+
+/**
+ * Get all rooms
+ */
+export const getAllRooms = async () => {
+  const response = await fetch(`${API_BASE_URL}/rooms`, {
+    headers: getAuthHeaders(),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch rooms');
+  }
+
+  return data;
+};
+
+/**
+ * Get available rooms
+ */
+export const getAvailableRooms = async () => {
+  const response = await fetch(`${API_BASE_URL}/rooms/available`, {
+    headers: getAuthHeaders(),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch available rooms');
+  }
+
+  return data;
+};
+
+/**
+ * Get room by ID
+ */
+export const getRoomById = async (id) => {
+  const response = await fetch(`${API_BASE_URL}/rooms/${id}`, {
+    headers: getAuthHeaders(),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch room');
+  }
+
+  return data;
+};
+
+// ============================================
+// Admission API
+// ============================================
+
+/**
+ * Get all admissions
+ */
+export const getAllAdmissions = async () => {
+  const response = await fetch(`${API_BASE_URL}/admissions`, {
+    headers: getAuthHeaders(),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch admissions');
+  }
+
+  return data;
+};
+
+/**
+ * Get admission by ID
+ */
+export const getAdmissionById = async (id) => {
+  const response = await fetch(`${API_BASE_URL}/admissions/${id}`, {
+    headers: getAuthHeaders(),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch admission');
+  }
+
+  return data;
+};
+
+/**
+ * Create new admission
+ */
+export const createAdmission = async (admissionData) => {
+  const response = await fetch(`${API_BASE_URL}/admissions`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: JSON.stringify(admissionData),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to create admission');
+  }
+
+  return data;
+};
+
+// ============================================
+// Billing API
+// ============================================
+
+/**
+ * Get all bills
+ */
+export const getAllBills = async () => {
+  const response = await fetch(`${API_BASE_URL}/bills`, {
+    headers: getAuthHeaders(),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch bills');
+  }
+
+  return data;
+};
+
+/**
+ * Get bill by ID
+ */
+export const getBillById = async (id) => {
+  const response = await fetch(`${API_BASE_URL}/bills/${id}`, {
+    headers: getAuthHeaders(),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch bill');
+  }
+
+  return data;
+};
+
+/**
+ * Generate new bill
+ */
+export const generateBill = async (billData) => {
+  const response = await fetch(`${API_BASE_URL}/bills`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: JSON.stringify(billData),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to generate bill');
+  }
+
+  return data;
+};
+
+/**
+ * Record payment for a bill
+ */
+export const recordPayment = async (billId) => {
+  const response = await fetch(`${API_BASE_URL}/bills/${billId}/payment`, {
+    method: 'PUT',
+    headers: getAuthHeaders(),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to record payment');
+  }
+
+  return data;
+};
+
+// ============================================
+// Discharge API
+// ============================================
+
+/**
+ * Get all discharges
+ */
+export const getAllDischarges = async () => {
+  const response = await fetch(`${API_BASE_URL}/discharges`, {
+    headers: getAuthHeaders(),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch discharges');
+  }
+
+  return data;
+};
+
+/**
+ * Get discharge by ID
+ */
+export const getDischargeById = async (id) => {
+  const response = await fetch(`${API_BASE_URL}/discharges/${id}`, {
+    headers: getAuthHeaders(),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch discharge');
+  }
+
+  return data;
+};
+
+/**
+ * Approve discharge (Doctor only)
+ */
+export const approveDischarge = async (admissionId) => {
+  const response = await fetch(`${API_BASE_URL}/admissions/${admissionId}/approve-discharge`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to approve discharge');
+  }
+
+  return data;
+};
+
+/**
+ * Finalize discharge (Admin/Receptionist only)
+ */
+export const finalizeDischarge = async (admissionId, dischargeData) => {
+  const response = await fetch(`${API_BASE_URL}/admissions/${admissionId}/discharge`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: JSON.stringify(dischargeData),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to finalize discharge');
+  }
+
+  return data;
+};
