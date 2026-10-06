@@ -20,6 +20,9 @@ import GenerateBillPage from './pages/GenerateBillPage';
 import BillDetailsPage from './pages/BillDetailsPage';
 import DischargeListPage from './pages/DischargeListPage';
 import DischargeDetailsPage from './pages/DischargeDetailsPage';
+import FollowUpListPage from './pages/FollowUpListPage';
+import FollowUpDetailsPage from './pages/FollowUpDetailsPage';
+import ScheduleFollowUpPage from './pages/ScheduleFollowUpPage';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -185,6 +188,30 @@ function App() {
             element={
               <ProtectedRoute>
                 <DischargeDetailsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/followups"
+            element={
+              <ProtectedRoute>
+                <FollowUpListPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/followups/new"
+            element={
+              <ProtectedRoute>
+                <ScheduleFollowUpPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/followups/:id"
+            element={
+              <ProtectedRoute>
+                <FollowUpDetailsPage />
               </ProtectedRoute>
             }
           />

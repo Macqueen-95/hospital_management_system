@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { 
   Home, Users, Calendar, UserPlus, CalendarPlus, Stethoscope, 
-  UserCog, LogOut, Menu, X, ChevronRight, Building2, Bed, Receipt, FileText
+  UserCog, LogOut, Menu, X, ChevronRight, Building2, Bed, Receipt, FileText, CalendarCheck
 } from 'lucide-react';
 
 const Layout = ({ children }) => {
@@ -33,6 +33,7 @@ const Layout = ({ children }) => {
         { name: 'Admissions', path: '/admissions', icon: Bed, roles: ['Admin', 'Receptionist'] },
         { name: 'Billing', path: '/bills', icon: Receipt, roles: ['Admin', 'Receptionist'] },
         { name: 'Discharges', path: '/discharges', icon: FileText, roles: ['Admin', 'Receptionist'] },
+        { name: 'Follow-ups', path: '/followups', icon: CalendarCheck, roles: ['Admin', 'Receptionist'] },
       );
     }
 
@@ -42,6 +43,7 @@ const Layout = ({ children }) => {
         { name: 'Rooms', path: '/rooms', icon: Building2, roles: ['Doctor'] },
         { name: 'Admissions', path: '/admissions', icon: Bed, roles: ['Doctor'] },
         { name: 'Discharges', path: '/discharges', icon: FileText, roles: ['Doctor'] },
+        { name: 'Follow-ups', path: '/followups', icon: CalendarCheck, roles: ['Doctor'] },
       );
     }
 

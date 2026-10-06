@@ -613,3 +613,79 @@ export const finalizeDischarge = async (admissionId, dischargeData) => {
 
   return data;
 };
+
+// ============================================
+// Follow-up API
+// ============================================
+
+/**
+ * Get all follow-ups
+ */
+export const getAllFollowUps = async () => {
+  const response = await fetch(`${API_BASE_URL}/followups`, {
+    headers: getAuthHeaders(),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch follow-ups');
+  }
+
+  return data;
+};
+
+/**
+ * Get follow-up by ID
+ */
+export const getFollowUpById = async (id) => {
+  const response = await fetch(`${API_BASE_URL}/followups/${id}`, {
+    headers: getAuthHeaders(),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch follow-up');
+  }
+
+  return data;
+};
+
+/**
+ * Create follow-up
+ */
+export const createFollowUp = async (followupData) => {
+  const response = await fetch(`${API_BASE_URL}/followups`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: JSON.stringify(followupData),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to schedule follow-up');
+  }
+
+  return data;
+};
+
+/**
+ * Update follow-up status
+ */
+export const updateFollowUpStatus = async (followupId, status) => {
+  const response = await fetch(`${API_BASE_URL}/followups/${followupId}/status`, {
+    method: 'PUT',
+    headers: getAuthHeaders(),
+    body: JSON.stringify({ status }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to update follow-up status');
+  }
+
+  return data;
+};

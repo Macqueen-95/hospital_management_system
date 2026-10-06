@@ -12,6 +12,7 @@ const roomRoutes = require('./routes/roomRoutes');
 const admissionRoutes = require('./routes/admissionRoutes');
 const billingRoutes = require('./routes/billingRoutes');
 const dischargeRoutes = require('./routes/dischargeRoutes');
+const followupRoutes = require('./routes/followupRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -52,6 +53,9 @@ app.use('/api/admissions', admissionRoutes);
 
 // Mount billing routes under /api/bills
 app.use('/api/bills', billingRoutes);
+
+// Mount follow-up routes under /api/followups (MUST come before generic /api discharge routes)
+app.use('/api/followups', followupRoutes);
 
 // Mount discharge routes under /api/discharges and /api/admissions
 app.use('/api/discharges', dischargeRoutes);
