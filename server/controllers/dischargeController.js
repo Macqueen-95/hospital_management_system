@@ -251,7 +251,7 @@ const finalizeDischarge = async (req, res) => {
 
   try {
     const { id } = req.params; // admission_id
-    const { discharge_summary, final_diagnosis, medications_prescribed, instructions } = req.body;
+    const { discharge_summary, final_diagnosis, medications_prescribed, instructions } = req.body || {};
     const userRole = req.user.role;
     const userId = req.user.user_id;
 
@@ -263,7 +263,7 @@ const finalizeDischarge = async (req, res) => {
       });
     }
 
-    // Validate required fields
+    // Validate required fields (at least discharge_summary needed)
     if (!discharge_summary || !discharge_summary.trim()) {
       return res.status(400).json({
         success: false,
