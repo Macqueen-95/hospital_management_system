@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { 
   Home, Users, Calendar, UserPlus, CalendarPlus, Stethoscope, 
   UserCog, LogOut, Menu, X, ChevronRight, Building2, Bed, Receipt, FileText, CalendarCheck,
-  Activity, BarChart3
+  Activity, BarChart3, UserCheck
 } from 'lucide-react';
 
 const Layout = ({ children }) => {
@@ -40,6 +40,7 @@ const Layout = ({ children }) => {
 
     if (user?.role === 'Admin') {
       baseItems.push(
+        { name: 'Doctors', path: '/doctors', icon: UserCheck, roles: ['Admin'] },
         { name: 'Activity Logs', path: '/activity-logs', icon: Activity, roles: ['Admin'] },
         { name: 'Reports', path: '/reports', icon: BarChart3, roles: ['Admin'] },
       );

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { getAllPatients, getAllDoctors, getAvailableRooms, createAdmission } from '../utils/api';
+import { getAllPatients, getActiveDoctors, getAvailableRooms, createAdmission } from '../utils/api';
 import Layout from '../components/Layout';
 import Button from '../components/Button';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -36,7 +36,7 @@ const CreateAdmissionPage = () => {
       setError('');
       const [patientsData, doctorsData, roomsData] = await Promise.all([
         getAllPatients(),
-        getAllDoctors(),
+        getActiveDoctors(),
         getAvailableRooms()
       ]);
       setPatients(patientsData.patients);

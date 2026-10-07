@@ -50,7 +50,9 @@ echo ""
 echo "Demo users will be recreated:"
 echo "  • Admin (username: admin, password: Admin@123)"
 echo "  • Receptionist (username: receptionist, password: Receptionist@123)"
-echo "  • Doctor (username: doctor, password: Doctor@123)"
+echo "  • Doctor 1 (username: doctor1, password: Doctor@123)"
+echo "  • Doctor 2 (username: doctor2, password: Doctor@123)"
+echo "  • Doctor 3 (username: doctor3, password: Doctor@123)"
 echo ""
 
 read -p "Are you sure you want to continue? Type 'yes' to proceed: " confirm
@@ -163,9 +165,9 @@ echo "👥 Step 3/5: Creating demo users..."
 mysql -u"$DB_USER" -p"$DB_PASSWORD" "$DB_NAME" <<EOF 2>/dev/null
 
 -- Insert demo users with hashed passwords
--- Note: These passwords are 'Admin@123', 'Receptionist@123', 'Doctor@123'
+-- Note: These passwords are 'Admin@123', 'Receptionist@123', 'Doctor@123' (for all doctors)
 
-INSERT INTO Users (username, password, full_name, email, phone, role, created_at) VALUES
+INSERT INTO Users (username, password_hash, full_name, email, phone, role, is_active, created_at) VALUES
 (
   'admin',
   '\$2b\$10\$YourHashedPasswordHere1',
@@ -173,6 +175,7 @@ INSERT INTO Users (username, password, full_name, email, phone, role, created_at
   'admin@hospital.com',
   '9999999999',
   'Admin',
+  TRUE,
   NOW()
 ),
 (
@@ -182,26 +185,71 @@ INSERT INTO Users (username, password, full_name, email, phone, role, created_at
   'receptionist@hospital.com',
   '9999999998',
   'Receptionist',
+  TRUE,
   NOW()
 ),
 (
-  'doctor',
+  'doctor1',
   '\$2b\$10\$YourHashedPasswordHere3',
   'Dr. John Doe',
-  'doctor@hospital.com',
+  'doctor1@hospital.com',
   '9999999997',
   'Doctor',
+  TRUE,
+  NOW()
+),
+(
+  'doctor2',
+  '\$2b\$10\$YourHashedPasswordHere4',
+  'Dr. Sarah Johnson',
+  'doctor2@hospital.com',
+  '9999999996',
+  'Doctor',
+  TRUE,
+  NOW()
+),
+(
+  'doctor3',
+  '\$2b\$10\$YourHashedPasswordHere5',
+  'Dr. Michael Chen',
+  'doctor3@hospital.com',
+  '9999999995',
+  'Doctor',
+  TRUE,
   NOW()
 );
 
--- Insert doctor profile for the doctor user
-INSERT INTO Doctors (user_id, specialization, qualification, experience_years, consultation_fee) VALUES
+-- Insert doctor profiles
+INSERT INTO Doctors (user_id, specialization, qualification, experience_years, consultation_fee, available_days, available_time_start, available_time_end) VALUES
 (
-  (SELECT user_id FROM Users WHERE username = 'doctor'),
+  (SELECT user_id FROM Users WHERE username = 'doctor1'),
   'Cardiology',
   'MBBS, MD (Cardiology)',
   15,
-  500.00
+  500.00,
+  'Monday, Tuesday, Wednesday, Thursday, Friday',
+  '09:00:00',
+  '17:00:00'
+),
+(
+  (SELECT user_id FROM Users WHERE username = 'doctor2'),
+  'Orthopedics',
+  'MBBS, MS (Orthopedics)',
+  10,
+  600.00,
+  'Monday, Wednesday, Friday',
+  '10:00:00',
+  '16:00:00'
+),
+(
+  (SELECT user_id FROM Users WHERE username = 'doctor3'),
+  'Pediatrics',
+  'MBBS, MD (Pediatrics)',
+  8,
+  450.00,
+  'Tuesday, Thursday, Saturday',
+  '08:00:00',
+  '14:00:00'
 );
 
 EOF
@@ -261,17 +309,19 @@ echo "✅ Step 5/5: Verifying reset..."
 
 # Count records in key tables
 USER_COUNT=$(mysql -u"$DB_USER" -p"$DB_PASSWORD" "$DB_NAME" -se "SELECT COUNT(*) FROM Users;" 2>/dev/null)
+DOCTOR_COUNT=$(mysql -u"$DB_USER" -p"$DB_PASSWORD" "$DB_NAME" -se "SELECT COUNT(*) FROM Doctors;" 2>/dev/null)
 PATIENT_COUNT=$(mysql -u"$DB_USER" -p"$DB_PASSWORD" "$DB_NAME" -se "SELECT COUNT(*) FROM Patients;" 2>/dev/null)
 ROOM_AVAILABLE=$(mysql -u"$DB_USER" -p"$DB_PASSWORD" "$DB_NAME" -se "SELECT COUNT(*) FROM Rooms WHERE is_available = TRUE;" 2>/dev/null)
 
 echo ""
 echo "Database Status:"
-echo "  • Users: $USER_COUNT (Expected: 3)"
+echo "  • Users: $USER_COUNT (Expected: 5)"
+echo "  • Doctors: $DOCTOR_COUNT (Expected: 3)"
 echo "  • Patients: $PATIENT_COUNT (Expected: 0)"
 echo "  • Available Rooms: $ROOM_AVAILABLE"
 echo ""
 
-if [ "$USER_COUNT" -eq 3 ] && [ "$PATIENT_COUNT" -eq 0 ]; then
+if [ "$USER_COUNT" -eq 5 ] && [ "$DOCTOR_COUNT" -eq 3 ] && [ "$PATIENT_COUNT" -eq 0 ]; then
     echo "${GREEN}✓${NC} Reset verification successful!"
 else
     echo "${YELLOW}⚠️  Warning: Verification shows unexpected counts${NC}"
@@ -303,9 +353,18 @@ echo "  ${GREEN}Receptionist:${NC}"
 echo "    Username: receptionist"
 echo "    Password: Receptionist@123"
 echo ""
-echo "  ${GREEN}Doctor:${NC}"
-echo "    Username: doctor"
-echo "    Password: Doctor@123"
+echo "  ${GREEN}Doctors:${NC}"
+echo "    Doctor 1 (Cardiology):"
+echo "      Username: doctor1"
+echo "      Password: Doctor@123"
+echo ""
+echo "    Doctor 2 (Orthopedics):"
+echo "      Username: doctor2"
+echo "      Password: Doctor@123"
+echo ""
+echo "    Doctor 3 (Pediatrics):"
+echo "      Username: doctor3"
+echo "      Password: Doctor@123"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 echo "🚀 Next Steps:"

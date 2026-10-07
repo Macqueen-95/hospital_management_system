@@ -25,6 +25,9 @@ import FollowUpDetailsPage from './pages/FollowUpDetailsPage';
 import ScheduleFollowUpPage from './pages/ScheduleFollowUpPage';
 import ActivityLogsPage from './pages/ActivityLogsPage';
 import ReportsPage from './pages/ReportsPage';
+import DoctorListPage from './pages/DoctorListPage';
+import AddDoctorPage from './pages/AddDoctorPage';
+import EditDoctorPage from './pages/EditDoctorPage';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -230,6 +233,30 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={['Admin']}>
                 <ReportsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/doctors"
+            element={
+              <ProtectedRoute>
+                <DoctorListPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/doctors/new"
+            element={
+              <ProtectedRoute allowedRoles={['Admin']}>
+                <AddDoctorPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/doctors/:id/edit"
+            element={
+              <ProtectedRoute allowedRoles={['Admin']}>
+                <EditDoctorPage />
               </ProtectedRoute>
             }
           />

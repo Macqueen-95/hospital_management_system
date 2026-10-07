@@ -186,6 +186,23 @@ export const getAllDoctors = async () => {
 };
 
 /**
+ * Get active doctors only (for dropdowns in appointments, admissions, follow-ups)
+ */
+export const getActiveDoctors = async () => {
+  const response = await fetch(`${API_BASE_URL}/doctors/active`, {
+    headers: getAuthHeaders(),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to fetch active doctors');
+  }
+
+  return data;
+};
+
+/**
  * Get doctor by ID
  */
 export const getDoctorById = async (id) => {
@@ -197,6 +214,63 @@ export const getDoctorById = async (id) => {
 
   if (!response.ok) {
     throw new Error(data.message || 'Failed to fetch doctor');
+  }
+
+  return data;
+};
+
+/**
+ * Create new doctor (Admin only)
+ */
+export const createDoctor = async (doctorData) => {
+  const response = await fetch(`${API_BASE_URL}/doctors`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: JSON.stringify(doctorData),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to create doctor');
+  }
+
+  return data;
+};
+
+/**
+ * Update doctor (Admin only)
+ */
+export const updateDoctor = async (id, doctorData) => {
+  const response = await fetch(`${API_BASE_URL}/doctors/${id}`, {
+    method: 'PUT',
+    headers: getAuthHeaders(),
+    body: JSON.stringify(doctorData),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to update doctor');
+  }
+
+  return data;
+};
+
+/**
+ * Update doctor status (Admin only)
+ */
+export const updateDoctorStatus = async (id, is_active) => {
+  const response = await fetch(`${API_BASE_URL}/doctors/${id}/status`, {
+    method: 'PATCH',
+    headers: getAuthHeaders(),
+    body: JSON.stringify({ is_active }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || 'Failed to update doctor status');
   }
 
   return data;

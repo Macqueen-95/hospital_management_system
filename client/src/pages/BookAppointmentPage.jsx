@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { getAllPatients, getAllDoctors, createAppointment } from '../utils/api';
+import { getAllPatients, getActiveDoctors, createAppointment } from '../utils/api';
 
 const BookAppointmentPage = () => {
   const [patients, setPatients] = useState([]);
@@ -29,7 +29,7 @@ const BookAppointmentPage = () => {
       setLoading(true);
       const [patientsData, doctorsData] = await Promise.all([
         getAllPatients(),
-        getAllDoctors()
+        getActiveDoctors()
       ]);
       setPatients(patientsData.patients);
       setDoctors(doctorsData.doctors);

@@ -34,6 +34,7 @@ Navigate to: `http://localhost:5173`
 - **Password:** `Admin@123`
 - **Access:** 
   - Full system access
+  - Doctor management (Add, edit, deactivate/reactivate doctors)
   - User management
   - Activity logs (Admin exclusive)
   - Reports and analytics (Admin exclusive)
@@ -50,16 +51,43 @@ Navigate to: `http://localhost:5173`
   - Bill generation and payment recording
   - Discharge finalization
   - Follow-up scheduling
+  - **Cannot** manage doctor accounts
 
-### Doctor Account
-- **Username:** `doctor`
+### Doctor Accounts
+
+#### Doctor 1 (Cardiology)
+- **Username:** `doctor1`
 - **Password:** `Doctor@123`
+- **Specialization:** Cardiology
+- **Qualification:** MBBS, MD (Cardiology)
+- **Experience:** 15 years
+- **Consultation Fee:** ₹500
+- **Availability:** Monday-Friday, 09:00-17:00
 - **Access:** 
   - Today's appointments
   - Patient consultation recording
   - Discharge approval
   - Follow-up management
   - Patient medical history
+  - **Cannot** manage doctor accounts
+
+#### Doctor 2 (Orthopedics)
+- **Username:** `doctor2`
+- **Password:** `Doctor@123`
+- **Specialization:** Orthopedics
+- **Qualification:** MBBS, MS (Orthopedics)
+- **Experience:** 10 years
+- **Consultation Fee:** ₹600
+- **Availability:** Monday, Wednesday, Friday, 10:00-16:00
+
+#### Doctor 3 (Pediatrics)
+- **Username:** `doctor3`
+- **Password:** `Doctor@123`
+- **Specialization:** Pediatrics
+- **Qualification:** MBBS, MD (Pediatrics)
+- **Experience:** 8 years
+- **Consultation Fee:** ₹450
+- **Availability:** Tuesday, Thursday, Saturday, 08:00-14:00
 
 ---
 

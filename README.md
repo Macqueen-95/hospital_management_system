@@ -93,6 +93,11 @@ The Hospital Management System (HMS) is a full-stack web application designed to
 ### Admin Features
 - 📊 **Activity Logs:** Complete audit trail of all system actions
 - 📈 **Reports & Analytics:** Real-time statistics and summaries
+- 👨‍⚕️ **Doctor Management:** 
+  - Add new doctors to the system
+  - Edit doctor information (specialization, qualifications, fees, availability)
+  - Deactivate/reactivate doctor accounts
+  - View all doctors (active and inactive)
 - 👥 User management
 - 🔐 System-wide access
 
@@ -393,6 +398,7 @@ Password: Admin@123
 
 **Access:**
 - All modules
+- Doctor management (Add, edit, deactivate/reactivate doctors)
 - Activity Logs (exclusive)
 - Reports & Analytics (exclusive)
 - User management
@@ -409,18 +415,33 @@ Password: Receptionist@123
 - Admission management
 - Billing and payment
 - Discharge finalization
+- **Cannot** manage doctor accounts
 
-### Doctor Account
+### Doctor Accounts
+
+#### Doctor 1 (Cardiology)
 ```
-Username: doctor
+Username: doctor1
 Password: Doctor@123
 ```
-
 **Access:**
 - Today's appointments
 - Patient consultations
 - Discharge approval
 - Follow-up management
+- **Cannot** manage doctor accounts
+
+#### Doctor 2 (Orthopedics)
+```
+Username: doctor2
+Password: Doctor@123
+```
+
+#### Doctor 3 (Pediatrics)
+```
+Username: doctor3
+Password: Doctor@123
+```
 
 ---
 

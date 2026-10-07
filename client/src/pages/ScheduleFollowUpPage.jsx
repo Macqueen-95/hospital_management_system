@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { createFollowUp, getAllPatients, getAllDoctors, getAllDischarges } from '../utils/api';
+import { createFollowUp, getAllPatients, getActiveDoctors, getAllDischarges } from '../utils/api';
 import Layout from '../components/Layout';
 import Button from '../components/Button';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -49,7 +49,7 @@ const ScheduleFollowUpPage = () => {
       setLoading(true);
       const [patientsData, doctorsData, dischargesData] = await Promise.all([
         getAllPatients(),
-        getAllDoctors(),
+        getActiveDoctors(),
         getAllDischarges()
       ]);
       
