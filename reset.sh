@@ -153,151 +153,42 @@ fi
 echo ""
 
 # ================================================================
-# Step 4: Create demo users
+# Step 4: Create demo users (via Node.js for proper bcrypt hashing)
 # ================================================================
 
-echo "👥 Step 3/5: Creating demo users..."
+echo "👥 Step 3/5: Creating demo users with bcrypt-hashed passwords..."
 
-# Note: Password hashes generated with bcrypt for 'Admin@123', 'Receptionist@123', 'Doctor@123'
-# Salt rounds: 10
-# These are pre-generated hashes for consistency
-
-mysql -u"$DB_USER" -p"$DB_PASSWORD" "$DB_NAME" <<EOF 2>/dev/null
-
--- Insert demo users with hashed passwords
--- Note: These passwords are 'Admin@123', 'Receptionist@123', 'Doctor@123' (for all doctors)
-
-INSERT INTO Users (username, password_hash, full_name, email, phone, role, is_active, created_at) VALUES
-(
-  'admin',
-  '\$2b\$10\$YourHashedPasswordHere1',
-  'Admin User',
-  'admin@hospital.com',
-  '9999999999',
-  'Admin',
-  TRUE,
-  NOW()
-),
-(
-  'receptionist',
-  '\$2b\$10\$YourHashedPasswordHere2',
-  'Jane Smith',
-  'receptionist@hospital.com',
-  '9999999998',
-  'Receptionist',
-  TRUE,
-  NOW()
-),
-(
-  'doctor1',
-  '\$2b\$10\$YourHashedPasswordHere3',
-  'Dr. John Doe',
-  'doctor1@hospital.com',
-  '9999999997',
-  'Doctor',
-  TRUE,
-  NOW()
-),
-(
-  'doctor2',
-  '\$2b\$10\$YourHashedPasswordHere4',
-  'Dr. Sarah Johnson',
-  'doctor2@hospital.com',
-  '9999999996',
-  'Doctor',
-  TRUE,
-  NOW()
-),
-(
-  'doctor3',
-  '\$2b\$10\$YourHashedPasswordHere5',
-  'Dr. Michael Chen',
-  'doctor3@hospital.com',
-  '9999999995',
-  'Doctor',
-  TRUE,
-  NOW()
-);
-
--- Insert doctor profiles
-INSERT INTO Doctors (user_id, specialization, qualification, experience_years, consultation_fee, available_days, available_time_start, available_time_end) VALUES
-(
-  (SELECT user_id FROM Users WHERE username = 'doctor1'),
-  'Cardiology',
-  'MBBS, MD (Cardiology)',
-  15,
-  500.00,
-  'Monday, Tuesday, Wednesday, Thursday, Friday',
-  '09:00:00',
-  '17:00:00'
-),
-(
-  (SELECT user_id FROM Users WHERE username = 'doctor2'),
-  'Orthopedics',
-  'MBBS, MS (Orthopedics)',
-  10,
-  600.00,
-  'Monday, Wednesday, Friday',
-  '10:00:00',
-  '16:00:00'
-),
-(
-  (SELECT user_id FROM Users WHERE username = 'doctor3'),
-  'Pediatrics',
-  'MBBS, MD (Pediatrics)',
-  8,
-  450.00,
-  'Tuesday, Thursday, Saturday',
-  '08:00:00',
-  '14:00:00'
-);
-
-EOF
-
-if [ $? -eq 0 ]; then
-    echo "${GREEN}✓${NC} Demo users created successfully"
-else
-    echo "${RED}❌ Error creating demo users${NC}"
-    echo ""
-    echo "Alternative: Run the Node.js seed script:"
-    echo "  cd server"
-    echo "  node seed_demo_users.js"
+if [ ! -f "server/seed_demo_users.js" ]; then
+    echo "${RED}❌ server/seed_demo_users.js not found${NC}"
     exit 1
 fi
+
+cd server
+
+if [ ! -d "node_modules" ]; then
+    echo "${YELLOW}⚠️  Installing dependencies first...${NC}"
+    npm install --silent
+fi
+
+node seed_demo_users.js
+
+if [ $? -eq 0 ]; then
+    echo "${GREEN}✓${NC} Demo users created with bcrypt passwords"
+else
+    echo "${RED}❌ Error creating demo users${NC}"
+    cd ..
+    exit 1
+fi
+
+cd ..
 
 echo ""
 
 # ================================================================
-# Step 5: Use Node.js script for proper password hashing
+# Step 5: (placeholder — seed script handles everything above)
 # ================================================================
 
-echo "🔐 Step 4/5: Generating secure passwords with bcrypt..."
-
-# Check if we're in the right directory
-if [ ! -f "server/seed_demo_users.js" ]; then
-    echo "${YELLOW}⚠️  Warning: seed_demo_users.js not found${NC}"
-    echo "Attempting to use direct SQL inserts..."
-else
-    # Run the Node.js seed script for proper password hashing
-    cd server
-    
-    # Check if node_modules exists
-    if [ ! -d "node_modules" ]; then
-        echo "${YELLOW}⚠️  Installing dependencies first...${NC}"
-        npm install --silent
-    fi
-    
-    # Run seed script
-    DB_PASSWORD="$DB_PASSWORD" node seed_demo_users.js
-    
-    if [ $? -eq 0 ]; then
-        echo "${GREEN}✓${NC} Passwords securely hashed with bcrypt"
-    else
-        echo "${YELLOW}⚠️  Note: Using fallback password hashing${NC}"
-    fi
-    
-    cd ..
-fi
+echo "🔐 Step 4/5: Password hashing complete (done by seed script)"
 
 echo ""
 

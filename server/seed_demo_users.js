@@ -1,115 +1,134 @@
-const bcrypt = require('bcrypt');
-const mysql = require('mysql2/promise');
-require('dotenv').config();
-
 /**
- * Seed demo users for development
- * Creates Admin, Receptionist, and Doctor accounts
+ * seed_demo_users.js
+ * Inserts demo users with properly bcrypt-hashed passwords.
+ * Called by reset.sh after the Users/Doctors tables are cleared.
+ * Exits 0 on success, 1 on failure.
  */
-async function seedDemoUsers() {
-  let connection;
 
+const bcrypt = require('bcrypt');
+const db = require('./config/db');
+
+const SALT_ROUNDS = 10;
+
+const DEMO_USERS = [
+  {
+    username: 'admin',
+    password: 'Admin@123',
+    full_name: 'Admin User',
+    email: 'admin@hospital.com',
+    phone: '9999999999',
+    role: 'Admin',
+    doctor: null
+  },
+  {
+    username: 'receptionist',
+    password: 'Receptionist@123',
+    full_name: 'Jane Smith',
+    email: 'receptionist@hospital.com',
+    phone: '9999999998',
+    role: 'Receptionist',
+    doctor: null
+  },
+  {
+    username: 'doctor1',
+    password: 'Doctor@123',
+    full_name: 'Dr. John Doe',
+    email: 'doctor1@hospital.com',
+    phone: '9999999997',
+    role: 'Doctor',
+    doctor: {
+      specialization: 'Cardiology',
+      qualification: 'MBBS, MD (Cardiology)',
+      experience_years: 15,
+      consultation_fee: 500.00,
+      available_days: 'Monday, Tuesday, Wednesday, Thursday, Friday',
+      available_time_start: '09:00:00',
+      available_time_end: '17:00:00'
+    }
+  },
+  {
+    username: 'doctor2',
+    password: 'Doctor@123',
+    full_name: 'Dr. Sarah Johnson',
+    email: 'doctor2@hospital.com',
+    phone: '9999999996',
+    role: 'Doctor',
+    doctor: {
+      specialization: 'Orthopedics',
+      qualification: 'MBBS, MS (Orthopedics)',
+      experience_years: 10,
+      consultation_fee: 600.00,
+      available_days: 'Monday, Wednesday, Friday',
+      available_time_start: '10:00:00',
+      available_time_end: '16:00:00'
+    }
+  },
+  {
+    username: 'doctor3',
+    password: 'Doctor@123',
+    full_name: 'Dr. Michael Chen',
+    email: 'doctor3@hospital.com',
+    phone: '9999999995',
+    role: 'Doctor',
+    doctor: {
+      specialization: 'Pediatrics',
+      qualification: 'MBBS, MD (Pediatrics)',
+      experience_years: 8,
+      consultation_fee: 450.00,
+      available_days: 'Tuesday, Thursday, Saturday',
+      available_time_start: '08:00:00',
+      available_time_end: '14:00:00'
+    }
+  }
+];
+
+async function seed() {
+  const connection = await db.getConnection();
   try {
-    // Create database connection
-    connection = await mysql.createConnection({
-      host: process.env.DB_HOST,
-      user: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
-      port: process.env.DB_PORT
-    });
+    await connection.beginTransaction();
 
-    console.log('Connected to database...');
+    for (const u of DEMO_USERS) {
+      const hash = await bcrypt.hash(u.password, SALT_ROUNDS);
 
-    // Demo user credentials
-    const demoUsers = [
-      {
-        username: 'admin',
-        password: 'Admin@123',
-        role: 'Admin',
-        full_name: 'System Administrator',
-        email: 'admin@hospital.com',
-        phone: '1234567890'
-      },
-      {
-        username: 'receptionist',
-        password: 'Receptionist@123',
-        role: 'Receptionist',
-        full_name: 'Jane Smith',
-        email: 'receptionist@hospital.com',
-        phone: '2345678901'
-      },
-      {
-        username: 'doctor',
-        password: 'Doctor@123',
-        role: 'Doctor',
-        full_name: 'Dr. John Doe',
-        email: 'doctor@hospital.com',
-        phone: '3456789012'
-      }
-    ];
-
-    // Check if users already exist
-    for (const user of demoUsers) {
-      const [existing] = await connection.query(
-        'SELECT user_id FROM Users WHERE username = ?',
-        [user.username]
-      );
-
-      if (existing.length > 0) {
-        console.log(`User '${user.username}' already exists, skipping...`);
-        continue;
-      }
-
-      // Hash password
-      const salt = await bcrypt.genSalt(10);
-      const password_hash = await bcrypt.hash(user.password, salt);
-
-      // Insert user
       const [result] = await connection.query(
         `INSERT INTO Users (username, password_hash, role, full_name, email, phone, is_active)
-         VALUES (?, ?, ?, ?, ?, ?, true)`,
-        [user.username, password_hash, user.role, user.full_name, user.email, user.phone]
+         VALUES (?, ?, ?, ?, ?, ?, TRUE)`,
+        [u.username, hash, u.role, u.full_name, u.email, u.phone]
       );
 
-      console.log(`Created user: ${user.username} (${user.role})`);
-
-      // If user is a Doctor, create corresponding Doctor profile
-      if (user.role === 'Doctor') {
+      if (u.doctor) {
         await connection.query(
-          `INSERT INTO Doctors (user_id, specialization, qualification, experience_years, consultation_fee, available_days, available_time_start, available_time_end)
+          `INSERT INTO Doctors
+             (user_id, specialization, qualification, experience_years, consultation_fee,
+              available_days, available_time_start, available_time_end)
            VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
           [
             result.insertId,
-            'General Medicine',
-            'MBBS, MD',
-            10,
-            500.00,
-            'Mon,Tue,Wed,Thu,Fri',
-            '09:00:00',
-            '17:00:00'
+            u.doctor.specialization,
+            u.doctor.qualification,
+            u.doctor.experience_years,
+            u.doctor.consultation_fee,
+            u.doctor.available_days,
+            u.doctor.available_time_start,
+            u.doctor.available_time_end
           ]
         );
-        console.log(`Created Doctor profile for user_id: ${result.insertId}`);
       }
+
+      console.log(`  ✓ ${u.role}: ${u.username}`);
     }
 
-    console.log('\n✅ Demo users seeded successfully!');
-    console.log('\nDemo Credentials:');
-    console.log('─────────────────────────────────');
-    console.log('Admin:        username: admin        password: Admin@123');
-    console.log('Receptionist: username: receptionist password: Receptionist@123');
-    console.log('Doctor:       username: doctor       password: Doctor@123');
-    console.log('─────────────────────────────────\n');
-
-  } catch (error) {
-    console.error('Error seeding demo users:', error.message);
+    await connection.commit();
+    console.log('\nSeed complete.');
+    process.exit(0);
+  } catch (err) {
+    await connection.rollback();
+    console.error('Seed failed:', err.message);
     process.exit(1);
   } finally {
-    if (connection) {
-      await connection.end();
-    }
+    connection.release();
+    process.exit(0);
   }
 }
 
-seedDemoUsers();
+seed();
