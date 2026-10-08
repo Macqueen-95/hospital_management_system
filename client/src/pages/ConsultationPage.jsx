@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getPatientHistory, getConsultation, createConsultation } from '../utils/api';
+import Layout from '../components/Layout';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const ConsultationPage = () => {
   const [patientHistory, setPatientHistory] = useState(null);
@@ -18,7 +20,6 @@ const ConsultationPage = () => {
   const [success, setSuccess] = useState(false);
   
   const { id } = useParams(); // appointment_id
-  const { logout } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -101,53 +102,30 @@ const ConsultationPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading consultation...</p>
-        </div>
-      </div>
+      <Layout><LoadingSpinner text="Loading consultation..." /></Layout>
     );
   }
 
   if (error && !patientHistory) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <header className="bg-white shadow">
-          <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
-            <button onClick={() => navigate('/appointments/today')} className="text-gray-600 hover:text-gray-800">
-              ← Back to Appointments
-            </button>
-          </div>
-        </header>
-        <main className="max-w-7xl mx-auto px-4 py-8">
+      <Layout>
+        <button onClick={() => navigate('/appointments/today')} className="mb-5 text-sm font-semibold text-[#13805d]">← Back to Today's Appointments</button>
           <div className="bg-red-50 border border-red-200 rounded-lg p-8 text-center">
             <p className="text-red-600 text-lg">{error}</p>
           </div>
-        </main>
-      </div>
+      </Layout>
     );
   }
 
   const isCompleted = existingConsultation !== null;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <div className="flex items-center space-x-4">
-            <button onClick={() => navigate('/appointments/today')} className="text-gray-600 hover:text-gray-800">
-              ← Back to Appointments
-            </button>
-            <h1 className="text-2xl font-bold text-gray-800">Consultation</h1>
-          </div>
-          <button onClick={() => { logout(); navigate('/login'); }} className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
-            Logout
-          </button>
-        </div>
-      </header>
-
-      <main className="max-w-6xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+    <Layout>
+      <div className="mb-5">
+        <button onClick={() => navigate('/appointments/today')} className="mb-4 text-sm font-semibold text-[#13805d]">← Back to Today's Appointments</button>
+        <h1 className="text-3xl font-extrabold text-[#18232c]">Consultation</h1>
+      </div>
+      <main className="max-w-6xl">
         
         {/* Success Message */}
         {success && (
@@ -395,7 +373,7 @@ const ConsultationPage = () => {
         </div>
 
       </main>
-    </div>
+    </Layout>
   );
 };
 

@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { getActivityLogs } from '../utils/api';
 import { Search, ChevronLeft, ChevronRight, Filter, X } from 'lucide-react';
+import Layout from '../components/Layout';
+import { useNavigate } from 'react-router-dom';
 
 const ActivityLogsPage = () => {
   const [logs, setLogs] = useState([]);
@@ -21,6 +23,7 @@ const ActivityLogsPage = () => {
     date: ''
   });
   const [showFilters, setShowFilters] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchLogs();
@@ -87,15 +90,18 @@ const ActivityLogsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#f4f7f4] p-6">
+    <Layout>
+    <div className="max-w-7xl">
       <div className="max-w-7xl mx-auto">
         
         {/* Header */}
         <div className="mb-6">
+          <button onClick={() => navigate('/dashboard')} className="mb-4 text-sm font-semibold text-[#13805d] hover:text-[#0f6449]">
+            ← Back to Dashboard
+          </button>
           <h1 className="text-3xl font-bold text-[#18232c] mb-2">Activity Logs</h1>
           <p className="text-[#53636c]">System audit trail and activity records</p>
         </div>
-
         {/* Filters */}
         <div className="bg-white rounded-lg border border-[#dce6e1] p-4 mb-6">
           <div className="flex items-center justify-between mb-4">
@@ -330,7 +336,8 @@ const ActivityLogsPage = () => {
           )}
         </div>
       </div>
-    </div>
+      </div>
+      </Layout>
   );
 };
 

@@ -4,11 +4,14 @@ import {
   Users, Calendar, Bed, Receipt, CalendarCheck, 
   TrendingUp, DollarSign, Activity 
 } from 'lucide-react';
+import Layout from '../components/Layout';
+import { useNavigate } from 'react-router-dom';
 
 const ReportsPage = () => {
   const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchReportSummary();
@@ -38,38 +41,45 @@ const ReportsPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#f4f7f4] p-6">
+      <Layout>
+      <div className="max-w-7xl">
         <div className="max-w-7xl mx-auto">
           <div className="text-center py-12">
             <div className="text-[#82928c]">Loading reports...</div>
           </div>
         </div>
       </div>
+      </Layout>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-[#f4f7f4] p-6">
+      <Layout>
+      <div className="max-w-7xl">
         <div className="max-w-7xl mx-auto">
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
             {error}
           </div>
         </div>
       </div>
+      </Layout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#f4f7f4] p-6">
+    <Layout>
+    <div className="max-w-7xl">
       <div className="max-w-7xl mx-auto">
         
         {/* Header */}
         <div className="mb-6">
+          <button onClick={() => navigate('/dashboard')} className="mb-4 text-sm font-semibold text-[#13805d] hover:text-[#0f6449]">
+            ← Back to Dashboard
+          </button>
           <h1 className="text-3xl font-bold text-[#18232c] mb-2">Reports & Analytics</h1>
           <p className="text-[#53636c]">System-wide statistics and summaries</p>
         </div>
-
         {/* Patient Summary */}
         <div className="mb-6">
           <div className="flex items-center gap-2 mb-4">
@@ -268,7 +278,8 @@ const ReportsPage = () => {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+      </Layout>
   );
 };
 

@@ -2,13 +2,15 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getAllAppointments } from '../utils/api';
+import Layout from '../components/Layout';
+import Button from '../components/Button';
 
 const AppointmentListPage = () => {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   const canManageAppointments = user?.role === 'Admin' || user?.role === 'Receptionist';
@@ -53,30 +55,13 @@ const AppointmentListPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      
-      {/* Header */}
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <div className="flex items-center space-x-4">
-            <button
-              onClick={() => navigate('/dashboard')}
-              className="text-gray-600 hover:text-gray-800"
-            >
-              ← Back to Dashboard
-            </button>
-            <h1 className="text-2xl font-bold text-gray-800">Appointments</h1>
-          </div>
-          <button
-            onClick={() => { logout(); navigate('/login'); }}
-            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
-          >
-            Logout
-          </button>
-        </div>
-      </header>
-
-      <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+    <Layout>
+      <div className="mb-6">
+        <p className="text-sm font-semibold text-[#13805d]">Schedule</p>
+        <h1 className="text-3xl font-extrabold text-[#18232c]">Appointments</h1>
+        <p className="mt-1 text-[#6b7b83]">Manage and track patient appointments.</p>
+      </div>
+      <main className="max-w-7xl">
         
         {/* Actions Bar */}
         <div className="bg-white rounded-xl shadow-md p-6 mb-6">
@@ -90,13 +75,13 @@ const AppointmentListPage = () => {
               </p>
             </div>
             {canManageAppointments && (
-              <button
+              <Button
                 onClick={() => navigate('/appointments/new')}
-                className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition flex items-center space-x-2"
+                variant="secondary"
+                icon={() => <span className="text-lg leading-none">+</span>}
               >
-                <span>+</span>
-                <span>Book Appointment</span>
-              </button>
+                Book Appointment
+              </Button>
             )}
           </div>
         </div>
@@ -190,7 +175,7 @@ const AppointmentListPage = () => {
         )}
 
       </main>
-    </div>
+    </Layout>
   );
 };
 

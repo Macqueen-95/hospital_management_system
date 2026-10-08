@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getPatientById } from '../utils/api';
+import Layout from '../components/Layout';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const PatientDetailsPage = () => {
   const [patient, setPatient] = useState(null);
@@ -9,7 +11,7 @@ const PatientDetailsPage = () => {
   const [error, setError] = useState('');
   
   const { id } = useParams();
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   const canManagePatients = user?.role === 'Admin' || user?.role === 'Receptionist';
@@ -55,62 +57,28 @@ const PatientDetailsPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading patient details...</p>
-        </div>
-      </div>
+      <Layout><LoadingSpinner text="Loading patient details..." /></Layout>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <header className="bg-white shadow">
-          <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
-            <button
-              onClick={() => navigate('/patients')}
-              className="text-gray-600 hover:text-gray-800"
-            >
-              ← Back to Patients
-            </button>
-          </div>
-        </header>
-        <main className="max-w-7xl mx-auto px-4 py-8">
+      <Layout>
+        <button onClick={() => navigate('/patients')} className="mb-5 text-sm font-semibold text-[#13805d]">← Back to Patients</button>
           <div className="bg-red-50 border border-red-200 rounded-lg p-8 text-center">
             <p className="text-red-600 text-lg">{error}</p>
           </div>
-        </main>
-      </div>
+      </Layout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      
-      {/* Header */}
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <div className="flex items-center space-x-4">
-            <button
-              onClick={() => navigate('/patients')}
-              className="text-gray-600 hover:text-gray-800"
-            >
-              ← Back to Patients
-            </button>
-            <h1 className="text-2xl font-bold text-gray-800">Patient Details</h1>
-          </div>
-          <button
-            onClick={() => { logout(); navigate('/login'); }}
-            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
-          >
-            Logout
-          </button>
-        </div>
-      </header>
-
-      <main className="max-w-5xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+    <Layout>
+      <div className="mb-5">
+        <button onClick={() => navigate('/patients')} className="mb-4 text-sm font-semibold text-[#13805d]">← Back to Patients</button>
+        <h1 className="text-3xl font-extrabold text-[#18232c]">Patient Details</h1>
+      </div>
+      <main className="max-w-5xl">
         
         {/* Patient Header Card */}
         <div className="bg-white rounded-xl shadow-md p-8 mb-6">
@@ -207,7 +175,7 @@ const PatientDetailsPage = () => {
         </div>
 
       </main>
-    </div>
+    </Layout>
   );
 };
 

@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
 import { getAllPatients, getActiveDoctors, createAppointment } from '../utils/api';
+import Layout from '../components/Layout';
+import LoadingSpinner from '../components/LoadingSpinner';
+import Alert from '../components/Alert';
+import Button from '../components/Button';
 
 const BookAppointmentPage = () => {
   const [patients, setPatients] = useState([]);
@@ -17,7 +20,6 @@ const BookAppointmentPage = () => {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   
-  const { logout } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -64,42 +66,22 @@ const BookAppointmentPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
-        </div>
-      </div>
+      <Layout><LoadingSpinner text="Loading appointment form..." /></Layout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <div className="flex items-center space-x-4">
-            <button
-              onClick={() => navigate('/appointments')}
-              className="text-gray-600 hover:text-gray-800"
-            >
-              ← Back to Appointments
-            </button>
-            <h1 className="text-2xl font-bold text-gray-800">Book Appointment</h1>
-          </div>
-          <button
-            onClick={() => { logout(); navigate('/login'); }}
-            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
-          >
-            Logout
-          </button>
-        </div>
-      </header>
-
-      <main className="max-w-4xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+    <Layout>
+      <div className="mb-6">
+        <button onClick={() => navigate('/appointments')} className="mb-4 text-sm font-semibold text-[#13805d] hover:text-[#0f6449]">
+          ← Back to Appointments
+        </button>
+        <h1 className="text-3xl font-extrabold text-[#18232c]">Book Appointment</h1>
+        <p className="mt-1 text-[#6b7b83]">Schedule a new patient appointment.</p>
+      </div>
+      <main className="max-w-4xl">
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-            <p className="text-red-600">{error}</p>
-          </div>
+          <div className="mb-6"><Alert type="error">{error}</Alert></div>
         )}
 
         <div className="bg-white rounded-xl shadow-md p-8">
@@ -191,25 +173,26 @@ const BookAppointmentPage = () => {
             </div>
 
             <div className="flex space-x-4 pt-4">
-              <button
+              <Button
                 type="submit"
                 disabled={submitting}
-                className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                loading={submitting}
+                className="flex-1"
               >
                 {submitting ? 'Booking...' : 'Book Appointment'}
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
                 onClick={() => navigate('/appointments')}
-                className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium"
+                variant="secondary"
               >
                 Cancel
-              </button>
+              </Button>
             </div>
           </form>
         </div>
       </main>
-    </div>
+    </Layout>
   );
 };
 
