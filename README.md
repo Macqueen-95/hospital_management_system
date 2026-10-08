@@ -296,6 +296,17 @@ cd server
 node seed_demo_users.js
 ```
 
+**Seed the complete demo dataset:**
+
+```bash
+node seed_demo_data.js
+```
+
+This creates five patients with different clinical journeys, appointments,
+consultations, admissions, rooms, bills, discharge records, and a follow-up
+record. Run `./reset.sh` when you want to clear the database and recreate the
+users and demo records from scratch.
+
 ### 2. Backend Environment Configuration
 
 Create `.env` file in `server/` directory:

@@ -6,6 +6,14 @@ const db = require('../config/db');
  */
 const getAllRooms = async (req, res) => {
   try {
+    const doctorFilter = req.user.role === 'Doctor'
+      ? `WHERE EXISTS (
+          SELECT 1 FROM Admissions a
+          INNER JOIN Doctors d ON a.doctor_id = d.doctor_id
+          WHERE a.room_id = Rooms.room_id AND d.user_id = ?
+        )`
+      : '';
+    const params = req.user.role === 'Doctor' ? [req.user.user_id] : [];
     const [rooms] = await db.query(
       `SELECT 
         room_id,
@@ -16,7 +24,9 @@ const getAllRooms = async (req, res) => {
         price_per_day,
         is_available
       FROM Rooms
-      ORDER BY floor, room_number`
+      ${doctorFilter}
+      ORDER BY floor, room_number`,
+      params
     );
 
     res.json({
@@ -39,6 +49,14 @@ const getAllRooms = async (req, res) => {
  */
 const getAvailableRooms = async (req, res) => {
   try {
+    const doctorFilter = req.user.role === 'Doctor'
+      ? `AND EXISTS (
+          SELECT 1 FROM Admissions a
+          INNER JOIN Doctors d ON a.doctor_id = d.doctor_id
+          WHERE a.room_id = Rooms.room_id AND d.user_id = ?
+        )`
+      : '';
+    const params = req.user.role === 'Doctor' ? [req.user.user_id] : [];
     const [rooms] = await db.query(
       `SELECT 
         room_id,
@@ -49,8 +67,9 @@ const getAvailableRooms = async (req, res) => {
         price_per_day,
         is_available
       FROM Rooms
-      WHERE is_available = TRUE
-      ORDER BY floor, room_number`
+      WHERE is_available = TRUE ${doctorFilter}
+      ORDER BY floor, room_number`,
+      params
     );
 
     res.json({
@@ -75,6 +94,14 @@ const getRoomById = async (req, res) => {
   try {
     const { id } = req.params;
 
+    const doctorFilter = req.user.role === 'Doctor'
+      ? `AND EXISTS (
+          SELECT 1 FROM Admissions a
+          INNER JOIN Doctors d ON a.doctor_id = d.doctor_id
+          WHERE a.room_id = Rooms.room_id AND d.user_id = ?
+        )`
+      : '';
+    const params = req.user.role === 'Doctor' ? [id, req.user.user_id] : [id];
     const [rooms] = await db.query(
       `SELECT 
         room_id,
@@ -85,8 +112,8 @@ const getRoomById = async (req, res) => {
         price_per_day,
         is_available
       FROM Rooms
-      WHERE room_id = ?`,
-      [id]
+      WHERE room_id = ? ${doctorFilter}`,
+      params
     );
 
     if (rooms.length === 0) {

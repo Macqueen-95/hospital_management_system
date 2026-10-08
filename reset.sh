@@ -185,10 +185,23 @@ cd ..
 echo ""
 
 # ================================================================
-# Step 5: (placeholder — seed script handles everything above)
+# Step 5: Create realistic demo records
 # ================================================================
 
-echo "🔐 Step 4/5: Password hashing complete (done by seed script)"
+echo "🩺 Step 4/5: Creating patients and clinical demo records..."
+
+cd server
+node seed_demo_data.js --replace
+
+if [ $? -eq 0 ]; then
+    echo "${GREEN}✓${NC} Demo patients and clinical records created"
+else
+    echo "${RED}❌ Error creating demo data${NC}"
+    cd ..
+    exit 1
+fi
+
+cd ..
 
 echo ""
 

@@ -244,6 +244,42 @@ const createFollowUp = async (req, res) => {
       });
     }
 
+    // A doctor may only schedule follow-ups under their own doctor profile.
+    if (userRole === 'Doctor' && doctors[0].user_id !== userId) {
+      await connection.rollback();
+      return res.status(403).json({
+        success: false,
+        message: 'You can only schedule follow-ups for yourself'
+      });
+    }
+
+    // Do not allow a doctor to use an unrelated patient record.
+    if (userRole === 'Doctor') {
+      const [ownedPatients] = await connection.query(
+        `SELECT 1
+         FROM Patients p
+         WHERE p.patient_id = ?
+         AND EXISTS (
+           SELECT 1 FROM Doctors doc
+           WHERE doc.user_id = ?
+           AND (
+             EXISTS (SELECT 1 FROM Appointments ap WHERE ap.patient_id = p.patient_id AND ap.doctor_id = doc.doctor_id)
+             OR EXISTS (SELECT 1 FROM Admissions ad WHERE ad.patient_id = p.patient_id AND ad.doctor_id = doc.doctor_id)
+             OR EXISTS (SELECT 1 FROM FollowUps fu WHERE fu.patient_id = p.patient_id AND fu.doctor_id = doc.doctor_id)
+           )
+         )`,
+        [patient_id, userId]
+      );
+
+      if (ownedPatients.length === 0) {
+        await connection.rollback();
+        return res.status(403).json({
+          success: false,
+          message: 'You can only schedule follow-ups for your own patients'
+        });
+      }
+    }
+
     // If discharge_id is provided, verify it exists and belongs to the patient
     if (discharge_id) {
       const [discharges] = await connection.query(
@@ -268,6 +304,24 @@ const createFollowUp = async (req, res) => {
           success: false,
           message: 'Discharge record does not belong to the selected patient'
         });
+      }
+
+      if (userRole === 'Doctor') {
+        const [ownedDischarges] = await connection.query(
+          `SELECT 1
+           FROM Discharges d
+           INNER JOIN Admissions a ON d.admission_id = a.admission_id
+           INNER JOIN Doctors doc ON a.doctor_id = doc.doctor_id
+           WHERE d.discharge_id = ? AND doc.user_id = ?`,
+          [discharge_id, userId]
+        );
+        if (ownedDischarges.length === 0) {
+          await connection.rollback();
+          return res.status(403).json({
+            success: false,
+            message: 'You can only use discharge records for your own patients'
+          });
+        }
       }
     }
 

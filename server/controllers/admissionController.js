@@ -21,6 +21,8 @@ const logActivity = async (userId, action, entityType, entityId, description) =>
  */
 const getAllAdmissions = async (req, res) => {
   try {
+    const doctorFilter = req.user.role === 'Doctor' ? 'WHERE d.user_id = ?' : '';
+    const params = req.user.role === 'Doctor' ? [req.user.user_id] : [];
     const [admissions] = await db.query(
       `SELECT 
         a.admission_id,
@@ -43,7 +45,9 @@ const getAllAdmissions = async (req, res) => {
       INNER JOIN Doctors d ON a.doctor_id = d.doctor_id
       INNER JOIN Users u ON d.user_id = u.user_id
       INNER JOIN Rooms r ON a.room_id = r.room_id
-      ORDER BY a.admission_date DESC, a.admission_id DESC`
+      ${doctorFilter}
+      ORDER BY a.admission_date DESC, a.admission_id DESC`,
+      params
     );
 
     res.json({
@@ -68,6 +72,8 @@ const getAdmissionById = async (req, res) => {
   try {
     const { id } = req.params;
 
+    const doctorFilter = req.user.role === 'Doctor' ? 'AND d.user_id = ?' : '';
+    const params = req.user.role === 'Doctor' ? [id, req.user.user_id] : [id];
     const [admissions] = await db.query(
       `SELECT 
         a.admission_id,
@@ -102,8 +108,8 @@ const getAdmissionById = async (req, res) => {
       INNER JOIN Doctors d ON a.doctor_id = d.doctor_id
       INNER JOIN Users u ON d.user_id = u.user_id
       INNER JOIN Rooms r ON a.room_id = r.room_id
-      WHERE a.admission_id = ?`,
-      [id]
+      WHERE a.admission_id = ? ${doctorFilter}`,
+      params
     );
 
     if (admissions.length === 0) {

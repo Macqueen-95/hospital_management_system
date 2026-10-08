@@ -22,11 +22,25 @@ const logActivity = async (userId, action, entityType, entityId, description) =>
  */
 const getAllPatients = async (req, res) => {
   try {
+    const doctorFilter = req.user.role === 'Doctor'
+      ? `WHERE EXISTS (
+          SELECT 1 FROM Doctors doc
+          WHERE doc.user_id = ?
+          AND (
+            EXISTS (SELECT 1 FROM Appointments ap WHERE ap.patient_id = Patients.patient_id AND ap.doctor_id = doc.doctor_id)
+            OR EXISTS (SELECT 1 FROM Admissions ad WHERE ad.patient_id = Patients.patient_id AND ad.doctor_id = doc.doctor_id)
+            OR EXISTS (SELECT 1 FROM FollowUps fu WHERE fu.patient_id = Patients.patient_id AND fu.doctor_id = doc.doctor_id)
+          )
+        )`
+      : '';
+    const params = req.user.role === 'Doctor' ? [req.user.user_id] : [];
     const [patients] = await db.query(
       `SELECT patient_id, first_name, last_name, date_of_birth, gender, phone, email, 
               blood_group, status, registered_at
        FROM Patients
-       ORDER BY registered_at DESC`
+       ${doctorFilter}
+       ORDER BY registered_at DESC`,
+      params
     );
 
     res.json({
@@ -52,13 +66,25 @@ const getPatientById = async (req, res) => {
   try {
     const { id } = req.params;
 
+    const doctorFilter = req.user.role === 'Doctor'
+      ? `AND EXISTS (
+          SELECT 1 FROM Doctors doc
+          WHERE doc.user_id = ?
+          AND (
+            EXISTS (SELECT 1 FROM Appointments ap WHERE ap.patient_id = Patients.patient_id AND ap.doctor_id = doc.doctor_id)
+            OR EXISTS (SELECT 1 FROM Admissions ad WHERE ad.patient_id = Patients.patient_id AND ad.doctor_id = doc.doctor_id)
+            OR EXISTS (SELECT 1 FROM FollowUps fu WHERE fu.patient_id = Patients.patient_id AND fu.doctor_id = doc.doctor_id)
+          )
+        )`
+      : '';
+    const params = req.user.role === 'Doctor' ? [id, req.user.user_id] : [id];
     const [patients] = await db.query(
       `SELECT patient_id, first_name, last_name, date_of_birth, gender, phone, email,
               address, emergency_contact_name, emergency_contact_phone, blood_group,
               status, registered_at
        FROM Patients
-       WHERE patient_id = ?`,
-      [id]
+       WHERE patient_id = ? ${doctorFilter}`,
+      params
     );
 
     if (patients.length === 0) {
@@ -307,17 +333,32 @@ const searchPatients = async (req, res) => {
 
     // Search by patient_id (exact), first_name, last_name, or phone (partial match)
     const searchTerm = `%${q}%`;
+    const doctorFilter = req.user.role === 'Doctor'
+      ? `AND EXISTS (
+          SELECT 1 FROM Doctors doc
+          WHERE doc.user_id = ?
+          AND (
+            EXISTS (SELECT 1 FROM Appointments ap WHERE ap.patient_id = Patients.patient_id AND ap.doctor_id = doc.doctor_id)
+            OR EXISTS (SELECT 1 FROM Admissions ad WHERE ad.patient_id = Patients.patient_id AND ad.doctor_id = doc.doctor_id)
+            OR EXISTS (SELECT 1 FROM FollowUps fu WHERE fu.patient_id = Patients.patient_id AND fu.doctor_id = doc.doctor_id)
+          )
+        )`
+      : '';
+    const params = req.user.role === 'Doctor'
+      ? [q, searchTerm, searchTerm, searchTerm, req.user.user_id]
+      : [q, searchTerm, searchTerm, searchTerm];
     const [patients] = await db.query(
       `SELECT patient_id, first_name, last_name, date_of_birth, gender, phone, email,
               blood_group, status, registered_at
        FROM Patients
-       WHERE patient_id = ? 
+       WHERE (patient_id = ?
           OR first_name LIKE ?
           OR last_name LIKE ?
-          OR phone LIKE ?
+          OR phone LIKE ?)
+       ${doctorFilter}
        ORDER BY registered_at DESC
        LIMIT 50`,
-      [q, searchTerm, searchTerm, searchTerm]
+      params
     );
 
     res.json({

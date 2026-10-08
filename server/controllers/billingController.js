@@ -21,6 +21,18 @@ const logActivity = async (userId, action, entityType, entityId, description) =>
  */
 const getAllBills = async (req, res) => {
   try {
+    const doctorFilter = req.user.role === 'Doctor'
+      ? `WHERE EXISTS (
+          SELECT 1 FROM Doctors doc
+          WHERE doc.user_id = ?
+          AND (
+            EXISTS (SELECT 1 FROM Appointments ap WHERE ap.patient_id = b.patient_id AND ap.doctor_id = doc.doctor_id)
+            OR EXISTS (SELECT 1 FROM Admissions ad WHERE ad.patient_id = b.patient_id AND ad.doctor_id = doc.doctor_id)
+            OR EXISTS (SELECT 1 FROM FollowUps fu WHERE fu.patient_id = b.patient_id AND fu.doctor_id = doc.doctor_id)
+          )
+        )`
+      : '';
+    const params = req.user.role === 'Doctor' ? [req.user.user_id] : [];
     const [bills] = await db.query(
       `SELECT 
         b.bill_id,
@@ -39,7 +51,9 @@ const getAllBills = async (req, res) => {
       FROM Bills b
       INNER JOIN Patients p ON b.patient_id = p.patient_id
       INNER JOIN Users u ON b.generated_by_user_id = u.user_id
-      ORDER BY b.generated_at DESC, b.bill_id DESC`
+      ${doctorFilter}
+      ORDER BY b.generated_at DESC, b.bill_id DESC`,
+      params
     );
 
     res.json({
@@ -64,6 +78,18 @@ const getBillById = async (req, res) => {
   try {
     const { id } = req.params;
 
+    const doctorFilter = req.user.role === 'Doctor'
+      ? `AND EXISTS (
+          SELECT 1 FROM Doctors doc
+          WHERE doc.user_id = ?
+          AND (
+            EXISTS (SELECT 1 FROM Appointments ap WHERE ap.patient_id = b.patient_id AND ap.doctor_id = doc.doctor_id)
+            OR EXISTS (SELECT 1 FROM Admissions ad WHERE ad.patient_id = b.patient_id AND ad.doctor_id = doc.doctor_id)
+            OR EXISTS (SELECT 1 FROM FollowUps fu WHERE fu.patient_id = b.patient_id AND fu.doctor_id = doc.doctor_id)
+          )
+        )`
+      : '';
+    const params = req.user.role === 'Doctor' ? [id, req.user.user_id] : [id];
     const [bills] = await db.query(
       `SELECT 
         b.bill_id,
@@ -89,8 +115,8 @@ const getBillById = async (req, res) => {
       FROM Bills b
       INNER JOIN Patients p ON b.patient_id = p.patient_id
       INNER JOIN Users u ON b.generated_by_user_id = u.user_id
-      WHERE b.bill_id = ?`,
-      [id]
+      WHERE b.bill_id = ? ${doctorFilter}`,
+      params
     );
 
     if (bills.length === 0) {

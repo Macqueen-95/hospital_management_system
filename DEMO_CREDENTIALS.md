@@ -89,6 +89,24 @@ Navigate to: `http://localhost:5173`
 - **Consultation Fee:** ₹450
 - **Availability:** Tuesday, Thursday, Saturday, 08:00-14:00
 
+## Preloaded Demo Patients
+
+Run `cd server && node seed_demo_data.js` after seeding users to create these
+records. The script stops safely if patients already exist. Use `./reset.sh`
+when you want to recreate the complete demo dataset.
+
+| Patient | Clinical scenario | Assigned doctor | Current state |
+|---|---|---|---|
+| Aarav Mehta | Stable angina and hypertension evaluation | doctor1 | Consultation completed |
+| Meera Kapoor | Closed right ankle fracture | doctor2 | Currently admitted |
+| Kabir Rao | Recurring wheezing and suspected asthma | doctor3 | Appointment scheduled |
+| Ananya Iyer | Newly diagnosed type 2 diabetes | doctor1 | Discharged with follow-up |
+| Rohan Singh | Viral upper respiratory infection | doctor3 | Consultation completed |
+
+The records include appointments, consultations, two admissions, rooms,
+billing records, one discharge, and one scheduled follow-up so the main
+dashboard and workflows have meaningful data to display.
+
 ---
 
 ## 🎬 Complete Workflow Demonstrations
@@ -159,7 +177,7 @@ Complete patient visit without admission.
 #### Step 6: Login as Doctor
 1. Click "Login"
 2. Enter:
-   - Username: `doctor`
+   - Username: `doctor1`
    - Password: `Doctor@123`
 3. Click "Login"
 

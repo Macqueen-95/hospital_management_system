@@ -101,10 +101,10 @@ const getPatientHistory = async (req, res) => {
         a.appointment_date
       FROM Consultations c
       INNER JOIN Appointments a ON c.appointment_id = a.appointment_id
-      WHERE a.patient_id = ?
+      WHERE a.patient_id = ? AND a.doctor_id = ?
       ORDER BY c.consultation_date DESC
       LIMIT 5`,
-      [appointment.patient_id]
+      [appointment.patient_id, authenticatedDoctorId]
     );
 
     res.json({
